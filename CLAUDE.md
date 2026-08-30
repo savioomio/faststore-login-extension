@@ -1,4 +1,4 @@
-# CLAUDE.md — VTEX Dev Login
+# CLAUDE.md — faststore-login-extension
 
 Ponto de entrada para agentes. Leia inteiro antes de escrever a primeira linha.
 

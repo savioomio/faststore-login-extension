@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "VTEX Dev Login",
+  "name": "faststore-login-extension",
   "version": "0.1.0",
   "description": "Loga um usuario VTEX numa loja em localhost ou num preview .vtex.app, sem copiar cookie do DevTools na mao.",
   "permissions": [
@@ -21,6 +21,6 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "VTEX Dev Login"
+    "default_title": "faststore-login-extension"
   }
 }

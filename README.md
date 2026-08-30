@@ -1,4 +1,4 @@
-# VTEX Dev Login
+# faststore-login-extension
 
 Extensão de navegador que loga um usuário VTEX numa loja FastStore rodando em
 **`localhost`** ou em **preview `.vtex.app`** — sem copiar cookie do DevTools na
