@@ -40,7 +40,7 @@ set-cookie: _vss=<token>; expires=…; domain=boldb2b.myvtex.com; path=/; secure
 ```
 
 Um front em `localhost` está em outra origem. O cookie **não cola** — daí o
-copia-e-cola manual. É o mesmo problema que o `faststore-login-modal` resolve em produção
+copia-e-cola manual. É o mesmo problema que um modal de login resolve em produção
 re-emitindo o cookie no resolver; aqui não há resolver no meio, então quem
 re-emite tem de ser a extensão.
 
@@ -110,8 +110,8 @@ com  authenticationToken no corpo → WrongCredentials
 sem  authenticationToken          → InvalidToken
 ```
 
-E o `accesskey/send` já era assim (o modal manda o token no corpo desde sempre —
-`arquivo/faststore-login-modal/src/graphql/vtex/resolvers/vtexIdAuth.ts:371`).
+E o `accesskey/send` já era assim: o modal de login que originou esta
+investigação mandava o token no corpo desde sempre.
 
 ### Por que isso muda tudo
 

@@ -2,9 +2,12 @@
 
 Ponto de entrada para agentes. Leia inteiro antes de escrever a primeira linha.
 
-Este repo tem **um** produto: a extensão em [`extension/`](extension/). Tudo em
-[`arquivo/`](arquivo/) é material de estudo, **não mantido** — não gaste tempo
-nem o cite como se fosse atual.
+Este repo tem **um** produto: a extensão em [`extension/`](extension/).
+
+**O código não tem comentários, de propósito.** O que explicaria cada trecho vive
+em [`docs/runbooks/mexer-no-codigo.md`](docs/runbooks/mexer-no-codigo.md) — leia a
+seção do arquivo antes de editá-lo. Descobriu algo novo? Atualize aquele
+documento, não escreva no fonte.
 
 ---
 

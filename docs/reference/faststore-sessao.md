@@ -6,9 +6,7 @@
 > coisa, o servidor diz outra.
 >
 > Medido em 2026-08-30 contra `@faststore/core` (`@faststore/cli ^4.4.0`) e
-> `@faststore/sdk` com `idb-keyval` 6.2.5. Vale para o
-> [`dev-login-extension`](../../extension/) e para o
-> [`faststore-login-modal`](../../arquivo/faststore-login-modal/).
+> `@faststore/sdk` com `idb-keyval` 6.2.5.
 
 ---
 

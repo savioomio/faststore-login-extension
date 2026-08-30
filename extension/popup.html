@@ -5,69 +5,171 @@
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
+    <svg hidden aria-hidden="true">
+      <symbol id="i-envelope" viewBox="0 0 24 24">
+        <rect x="2.5" y="5" width="19" height="14" rx="2.5" />
+        <path d="M3 7.5l8.15 5.3a1.6 1.6 0 0 0 1.7 0L21 7.5" />
+      </symbol>
+      <symbol id="i-key" viewBox="0 0 24 24">
+        <circle cx="8" cy="8" r="4.2" />
+        <path d="M11 11l8.5 8.5M17 17l2-2M14.5 14.5l1.5-1.5" />
+      </symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24">
+        <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+        <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24">
+        <path d="M4.5 12.5l5 5 10-11" />
+      </symbol>
+      <symbol id="i-store" viewBox="0 0 24 24">
+        <path d="M3.5 9.5h17v10a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z" />
+        <path d="M3 9.5l1.6-5A1.5 1.5 0 0 1 6 3.5h12a1.5 1.5 0 0 1 1.4 1l1.6 5" />
+        <path d="M9.5 21v-5h5v5" />
+      </symbol>
+      <symbol id="i-back" viewBox="0 0 24 24">
+        <path d="M15 5l-7 7 7 7" />
+      </symbol>
+      <symbol id="i-alert" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" />
+        <path d="M12 7.5v5.5M12 16.3v.2" />
+      </symbol>
+      <symbol id="i-edit" viewBox="0 0 24 24">
+        <path d="M4 20h4l10-10-4-4L4 16z" />
+      </symbol>
+      <symbol id="i-exit" viewBox="0 0 24 24">
+        <path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14" />
+        <path d="M10 8l-4 4 4 4M6.5 12H15" />
+      </symbol>
+      <symbol id="i-send" viewBox="0 0 24 24">
+        <path d="M4 11.5l16-7-7 16-2.2-6.6z" />
+      </symbol>
+    </svg>
+
     <header>
-      <h1>faststore-login-extension</h1>
-      <p class="alvo">
-        <span id="ambiente" class="tag" hidden></span>
-        <span id="alvo">verificando…</span>
-      </p>
+      <span class="marca" aria-hidden="true">
+        <svg viewBox="0 0 48 48"><use href="#logo-mark" /></svg>
+      </span>
+      <svg hidden aria-hidden="true">
+        <symbol id="logo-mark" viewBox="0 0 48 48">
+          <rect width="48" height="48" rx="11.5" fill="currentColor" stroke="none" />
+          <circle cx="24" cy="20" r="7" fill="#fff" stroke="none" />
+          <path d="M21.5 22.5h5l2 11h-9z" fill="#fff" stroke="none" />
+        </symbol>
+      </svg>
+      <span class="marca-texto">FastStore&nbsp;Login</span>
+      <span id="ambiente" class="tag" hidden></span>
     </header>
 
-    <!-- aba fora de alcance -->
-    <section id="tela-fora" hidden>
-      <p class="aviso" id="fora-motivo"></p>
-      <p class="nota">
-        A extensão age em <code>localhost</code>, <code>127.0.0.1</code> e nos
-        previews <code>*.vtex.app</code>. Em produção ela não é necessária: lá o
-        domínio é unificado e o login da loja já funciona sozinho.
-      </p>
-    </section>
+    <main>
+      <section id="tela-fora" class="tela" hidden>
+        <div class="aviso-figura"><svg class="ic"><use href="#i-store" /></svg></div>
+        <h1>Abra a loja primeiro</h1>
+        <p class="sub" id="fora-motivo"></p>
+        <ul class="lista-alvos">
+          <li><code>localhost:3000</code><span>a loja no seu computador</span></li>
+          <li><code>loja.vtex.app</code><span>o endereço de teste</span></li>
+        </ul>
+        <p class="rodape-nota">
+          Abra um desses endereços numa aba e clique no ícone de novo.
+        </p>
+      </section>
 
-    <!-- configuração de conta -->
-    <section id="tela-conta" hidden>
-      <label for="conta">Conta VTEX</label>
-      <input id="conta" type="text" placeholder="boldb2b" autocomplete="off" spellcheck="false" />
-      <p id="conta-nota" class="nota"></p>
-    </section>
+      <section id="tela-email" class="tela" hidden>
+        <div class="cabeca">
+          <span class="figura"><svg class="ic"><use href="#i-envelope" /></svg></span>
+          <div>
+            <h1>Acesse a loja</h1>
+            <p class="sub">Vamos enviar um código para o seu e-mail</p>
+          </div>
+        </div>
 
-    <!-- já logado -->
-    <section id="tela-logado" hidden>
-      <div class="sessao">
-        <span class="rotulo">logado como</span>
-        <strong id="sessao-user"></strong>
-        <dl id="sessao-detalhes"></dl>
-      </div>
-      <button id="btn-sair" class="secundario">Sair e limpar cookie</button>
-    </section>
+        <label class="campo">
+          <svg class="ic ic-campo"><use href="#i-envelope" /></svg>
+          <input id="email" type="email" placeholder="seu@email.com.br"
+                 autocomplete="email" spellcheck="false" enterkeyhint="send" />
+        </label>
 
-    <!-- pedir código / senha -->
-    <section id="tela-entrar" hidden>
-      <label for="email">E-mail do usuário</label>
-      <input id="email" type="email" placeholder="usuario@exemplo.com" autocomplete="off" spellcheck="false" />
+        <div id="bloco-senha" hidden>
+          <label class="campo">
+            <svg class="ic ic-campo"><use href="#i-lock" /></svg>
+            <input id="senha" type="password" placeholder="Sua senha"
+                   autocomplete="off" enterkeyhint="go" />
+          </label>
+        </div>
 
-      <div id="bloco-senha" hidden>
-        <label for="senha">Senha <span class="opcional">(opcional — deixe vazio para receber código)</span></label>
-        <input id="senha" type="password" autocomplete="off" />
-      </div>
+        <button id="btn-enviar" class="acao">
+          <svg class="ic"><use href="#i-send" /></svg>
+          <span class="rotulo">Enviar código</span>
+        </button>
 
-      <button id="btn-entrar">Enviar código</button>
-      <p id="metodos-nota" class="nota"></p>
-    </section>
+        <button id="btn-alternar" class="link" hidden></button>
+      </section>
 
-    <!-- digitar código -->
-    <section id="tela-codigo" hidden>
-      <p class="enviado">
-        Código enviado para <strong id="codigo-email"></strong>.
-      </p>
-      <label for="codigo">Código de 6 dígitos</label>
-      <input id="codigo" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off" />
-      <button id="btn-codigo">Entrar</button>
-      <button id="btn-voltar" class="link">Usar outro e-mail</button>
-    </section>
+      <section id="tela-codigo" class="tela" hidden>
+        <div class="cabeca">
+          <span class="figura"><svg class="ic"><use href="#i-key" /></svg></span>
+          <div>
+            <h1>Digite o código</h1>
+            <p class="sub">Enviamos para <strong id="codigo-email"></strong></p>
+          </div>
+        </div>
 
-    <p id="erro" class="erro" hidden></p>
-    <p id="ok" class="ok" hidden></p>
-    <p id="aviso" class="aviso-box" hidden></p>
+        <input id="codigo" class="codigo" type="text" inputmode="numeric"
+               maxlength="6" placeholder="000000" autocomplete="one-time-code"
+               aria-label="Código de 6 dígitos" />
+
+        <button id="btn-entrar" class="acao">
+          <svg class="ic"><use href="#i-check" /></svg>
+          <span class="rotulo">Entrar</span>
+        </button>
+
+        <div class="linha-links">
+          <button id="btn-voltar" class="link">
+            <svg class="ic"><use href="#i-back" /></svg> Trocar e-mail
+          </button>
+          <button id="btn-reenviar" class="link">Reenviar código</button>
+        </div>
+      </section>
+
+      <section id="tela-conectado" class="tela" hidden>
+        <div class="cabeca">
+          <span class="figura ok"><svg class="ic"><use href="#i-check" /></svg></span>
+          <div>
+            <h1>Tudo certo</h1>
+            <p class="sub">Você está conectado na loja</p>
+          </div>
+        </div>
+
+        <div class="cartao">
+          <strong id="sessao-user"></strong>
+          <dl id="sessao-detalhes"></dl>
+        </div>
+
+        <button id="btn-sair" class="acao secundaria">
+          <svg class="ic"><use href="#i-exit" /></svg>
+          <span class="rotulo">Sair desta conta</span>
+        </button>
+      </section>
+
+      <p id="erro" class="faixa erro" hidden></p>
+      <p id="ok" class="faixa ok" hidden></p>
+      <details id="aviso" class="detalhe" hidden>
+        <summary><svg class="ic"><use href="#i-alert" /></svg> <span id="aviso-titulo"></span></summary>
+        <p id="aviso-texto"></p>
+      </details>
+    </main>
+
+    <footer id="rodape" hidden>
+      <svg class="ic"><use href="#i-store" /></svg>
+      <span id="loja-nome"></span>
+      <button id="btn-editar-loja" class="link" title="Trocar a loja">
+        <svg class="ic"><use href="#i-edit" /></svg>
+      </button>
+      <label class="campo campo-inline" id="campo-loja" hidden>
+        <input id="conta" type="text" placeholder="nome da loja"
+               autocomplete="off" spellcheck="false" />
+      </label>
+    </footer>
 
     <script type="module" src="popup.js"></script>
   </body>

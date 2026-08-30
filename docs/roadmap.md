@@ -16,9 +16,9 @@ descoberto nos outros dois volta para cá.
 cookie, logout que desloga de verdade, e suporte a `localhost` e preview
 `.vtex.app`. Falta o teste de um login bem-sucedido feito à mão.
 
-> O `faststore-login-modal` foi **arquivado** em 2026-08-30: é componente de
-> produção, não pertence a um repo de ferramenta de desenvolvimento.
-> Ver [`arquivo/README.md`](../arquivo/README.md).
+> Um modal de login de produção viveu aqui como material de estudo e foi
+> **removido** em 2026-08-30 — é componente de loja, não de ferramenta de
+> desenvolvimento. Está no commit inicial se alguém precisar.
 
 ---
 
@@ -58,9 +58,7 @@ Até ele passar, tudo aqui é projeto, não resultado.
   verificadas.
 - **Cadastro de cliente** (`storefront/users`) — fora de escopo em todos os três
   produtos deste repo, até alguém precisar.
-- **Variante B2B do `faststore-login-modal`** (família authenticator, username, organização).
-  O componente atual é B2C e o `AGENTS.md` dele manda parar antes de adaptar.
-  A base de conhecimento §7 tem o que seria preciso.
+
 
 ---
 

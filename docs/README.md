@@ -122,6 +122,7 @@ tasks/<área>.md, seções ## T-001…      área por arquivo, número por seç�
 ela — [`extension/README.md`](../extension/README.md). O *porquê* das decisões e
 o conhecimento de plataforma ficam aqui.
 
-E [`arquivo/`](../arquivo/) guarda o que **não é deste projeto**: material de
-estudo que veio antes da extensão e não é mantido. Se um documento daqui citar
-algo de lá, é como referência histórica — nunca como coisa viva.
+⚠️ **O código da extensão não tem comentários.** O que os substitui é
+[`runbooks/mexer-no-codigo.md`](runbooks/mexer-no-codigo.md): um mapa arquivo a
+arquivo com as armadilhas de cada um. Mexeu no código e aprendeu algo? Vai para
+lá, não para o fonte.

@@ -5,9 +5,8 @@ Extensão de navegador que loga um usuário VTEX numa loja FastStore rodando em
 mão.
 
 ```
-extension/   a extensão            é isto que se carrega no navegador
-docs/        o que se sabe         decisões, regras, investigações, tarefas
-arquivo/     o que não é daqui     material de estudo, não mantido
+extension/   a extensão      é isto que se carrega no navegador
+docs/        o que se sabe   decisões, regras, investigações, tarefas
 ```
 
 ---

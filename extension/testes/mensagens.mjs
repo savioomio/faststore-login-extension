@@ -61,7 +61,7 @@ abaUrl = 'https://boldb2b.myvtex.com/'
 ;({ data } = await chamar({ action: 'status' }))
 t('recusa', data.ok === false)
 t('motivo definido (não "undefined")', typeof data.motivo === 'string' && data.motivo.length > 10)
-t('motivo explica o porquê', /admin|sessão/i.test(data.motivo ?? ''))
+t('motivo é frase completa, sem jargão', /^[A-Z].*\.$/.test(data.motivo ?? '') && !/cookie|sessão|admin|host/i.test(data.motivo ?? ''))
 console.log(`       "${data.motivo}"`)
 
 console.log('\n=== toda recusa tem motivo? ===')

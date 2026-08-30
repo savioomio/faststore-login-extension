@@ -23,7 +23,7 @@ cookie de sessão em `localhost` via `chrome.cookies.set`.**
 
 ## Alternativas descartadas
 
-### A) Mutation GraphQL no projeto (o que o `faststore-login-modal` faz)
+### A) Mutation GraphQL dentro do projeto da loja
 
 É a arquitetura **certa para produção** e já existe neste repo. Como ferramenta
 de desenvolvimento, não serve:
@@ -41,8 +41,7 @@ qualquer loja de qualquer stack que rode em localhost.
 
 ### B) `patch-package` no `@faststore/core`
 
-Descartado de saída: o `AGENTS.md` do `faststore-login-modal` já registra que **patch não
-sobe para produção no VTEX WebOps**, e um patch que injeta autenticação é a
+Descartado de saída: **patch não sobe para produção no VTEX WebOps**, e um patch que injeta autenticação é a
 última coisa que se quer sobrevivendo por acidente num build.
 
 ### C) Proxy local (mitmproxy / Node) reescrevendo `Set-Cookie`
@@ -83,12 +82,13 @@ justamente o passo chato. E não faz logout nem troca de conta.
   nunca vê `appKey`/`appToken`
   ([R-1](../rules/seguranca.md#r-1--nada-de-appkey--apptoken-na-extensão-nunca)).
 
-## Relação com o `faststore-login-modal`
+## Relação com o modal de login de produção
 
-Os dois compartilham **o mesmo handshake** e passam a compartilhar a mesma base
-de conhecimento. A diferença é só o destino do cookie:
+Existiu neste repo um modal de login headless para FastStore, arquivado e depois
+removido em 2026-08-30 (recuperável no commit inicial). Ele resolvia o mesmo
+problema **em produção**, e a comparação é o que justifica esta arquitetura:
 
-| | `faststore-login-modal` | `dev-login-extension` |
+| | modal dentro da loja | esta extensão |
 |---|---|---|
 | Público | cliente final, produção | desenvolvedor, localhost |
 | Onde roda | resolver GraphQL do projeto | service worker da extensão |

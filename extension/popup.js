@@ -1,126 +1,111 @@
-/**
- * Popup — so desenha e coleta. Rede e cookie sao do service worker.
- *
- * Regra que nao se quebra aqui: mensagem de erro NUNCA revela se o e-mail existe
- * (R-5). O `WrongCredentials` da VTEX e anti-enumeracao por design; o texto vem
- * pronto do `vtexid.js` e nao deve ser "melhorado" com diagnostico que a
- * plataforma nao deu.
- */
+const PROTOCOLO = 3;
+const SEGUNDOS_PARA_REENVIAR = 30;
 
 const $ = (id) => document.getElementById(id);
 
 const el = {
-  alvo: $("alvo"),
   ambiente: $("ambiente"),
   telaFora: $("tela-fora"),
-  foraMotivo: $("fora-motivo"),
-  avisoBox: $("aviso"),
-  telaConta: $("tela-conta"),
-  telaLogado: $("tela-logado"),
-  telaEntrar: $("tela-entrar"),
+  telaEmail: $("tela-email"),
   telaCodigo: $("tela-codigo"),
-  conta: $("conta"),
-  contaNota: $("conta-nota"),
-  sessaoUser: $("sessao-user"),
-  sessaoDetalhes: $("sessao-detalhes"),
+  telaConectado: $("tela-conectado"),
+  foraMotivo: $("fora-motivo"),
   email: $("email"),
   senha: $("senha"),
   blocoSenha: $("bloco-senha"),
-  metodosNota: $("metodos-nota"),
   codigo: $("codigo"),
   codigoEmail: $("codigo-email"),
+  conta: $("conta"),
+  campoLoja: $("campo-loja"),
+  lojaNome: $("loja-nome"),
+  rodape: $("rodape"),
+  sessaoUser: $("sessao-user"),
+  sessaoDetalhes: $("sessao-detalhes"),
+  btnEnviar: $("btn-enviar"),
   btnEntrar: $("btn-entrar"),
-  btnCodigo: $("btn-codigo"),
   btnSair: $("btn-sair"),
   btnVoltar: $("btn-voltar"),
+  btnReenviar: $("btn-reenviar"),
+  btnAlternar: $("btn-alternar"),
+  btnEditarLoja: $("btn-editar-loja"),
   erro: $("erro"),
   ok: $("ok"),
+  aviso: $("aviso"),
+  avisoTitulo: $("aviso-titulo"),
+  avisoTexto: $("aviso-texto"),
 };
 
 let alvo = null;
-let metodos = { password: true, accessKey: true };
-
-/** Tem que bater com o `PROTOCOLO` do background.js. */
-const PROTOCOLO = 3;
+let metodos = { password: false, accessKey: true };
+let modoSenha = false;
+let contadorReenvio = null;
 
 const RECARREGUE =
-  "A extensão foi atualizada mas o processo antigo ainda está rodando. " +
-  "Abra chrome://extensions e clique em recarregar (↻) nesta extensão.";
-
-/* -------------------------------------------------------------------------- */
+  "A extensão foi atualizada. Abra chrome://extensions e clique em recarregar nela.";
 
 function send(action, payload = {}) {
   return new Promise((resolve, reject) => {
     chrome.runtime.sendMessage({ action, ...payload }, (resposta) => {
-      if (chrome.runtime.lastError) {
-        reject(new Error(chrome.runtime.lastError.message));
-      } else if (resposta?.error) {
-        reject(new Error(resposta.error));
-      } else {
-        resolve(resposta?.data);
-      }
+      if (chrome.runtime.lastError) reject(new Error(chrome.runtime.lastError.message));
+      else if (resposta?.error) reject(new Error(resposta.error));
+      else resolve(resposta?.data);
     });
   });
 }
 
-function mostrar(secao) {
-  for (const s of [el.telaFora, el.telaConta, el.telaLogado, el.telaEntrar, el.telaCodigo]) {
-    s.hidden = true;
+function mostrar(tela) {
+  for (const t of [el.telaFora, el.telaEmail, el.telaCodigo, el.telaConectado]) {
+    t.hidden = true;
   }
-  if (secao === "fora") el.telaFora.hidden = false;
-  if (secao === "logado") {
-    el.telaConta.hidden = false;
-    el.telaLogado.hidden = false;
-  }
-  if (secao === "entrar") {
-    el.telaConta.hidden = false;
-    el.telaEntrar.hidden = false;
-  }
-  if (secao === "codigo") el.telaCodigo.hidden = false;
+  tela.hidden = false;
+  el.rodape.hidden = tela === el.telaFora;
 }
 
 function erro(texto) {
-  el.erro.textContent = texto;
+  el.erro.textContent = texto ?? "";
   el.erro.hidden = !texto;
   el.ok.hidden = true;
 }
 
-function ok(texto) {
-  el.ok.textContent = texto;
+function sucesso(texto) {
+  el.ok.textContent = texto ?? "";
   el.ok.hidden = !texto;
   el.erro.hidden = true;
 }
 
-function limpaAvisos() {
+function limpaFaixas() {
   el.erro.hidden = true;
   el.ok.hidden = true;
 }
 
-/** Diagnóstico longo — fica visível até a próxima leitura de estado. */
 function aviso(texto) {
-  el.avisoBox.textContent = texto ?? "";
-  el.avisoBox.hidden = !texto;
+  el.aviso.hidden = !texto;
+  if (!texto) return;
+  el.avisoTitulo.textContent = "A loja encerrou a sessão";
+  el.avisoTexto.textContent = texto;
+  el.aviso.open = false;
 }
 
-/** Roda uma acao com o botao travado — evita duplo clique gastando rate limit. */
-async function comBotao(botao, rotulo, fn) {
-  const original = botao.textContent;
+async function comCarregando(botao, fn) {
+  const rotulo = botao.querySelector(".rotulo");
+  const textoOriginal = rotulo?.textContent;
   botao.disabled = true;
-  botao.textContent = rotulo;
-  limpaAvisos();
+  botao.classList.add("ocupado");
+  if (rotulo) rotulo.textContent = "Aguarde…";
+  limpaFaixas();
+
   try {
     await fn();
   } catch (e) {
     erro(e.message);
   } finally {
     botao.disabled = false;
-    botao.textContent = original;
+    botao.classList.remove("ocupado");
+    if (rotulo && textoOriginal) rotulo.textContent = textoOriginal;
   }
 }
 
-/* -------------------------------------------------------------------------- */
-
-function formataTempo(segundos) {
+function tempoLegivel(segundos) {
   if (segundos === null) return "—";
   if (segundos <= 0) return "expirada";
   const h = Math.floor(segundos / 3600);
@@ -131,8 +116,7 @@ function formataTempo(segundos) {
 function desenhaSessao(sessao) {
   el.sessaoUser.textContent = sessao.user;
 
-  const linhas = [["expira em", formataTempo(sessao.expiresIn)]];
-  // Campos so de B2B: respondem "estou vendo a loja como qual organizacao?".
+  const linhas = [["acesso expira em", tempoLegivel(sessao.expiresIn)]];
   if (sessao.isRepresentative !== null) {
     linhas.push(["representante", sessao.isRepresentative ? "sim" : "não"]);
   }
@@ -150,175 +134,171 @@ function desenhaSessao(sessao) {
   );
 }
 
-/**
- * Pergunta a conta quais metodos ela habilita e desenha a UI a partir disso —
- * sem chutar. E o que faz a extensao servir B2C e B2B sem ramificacao (T-007).
- */
+function aplicaModo() {
+  const soSenha = metodos.password && !metodos.accessKey;
+  const ambos = metodos.password && metodos.accessKey;
+  modoSenha = modoSenha || soSenha;
+
+  el.blocoSenha.hidden = !modoSenha;
+  el.btnEnviar.querySelector(".rotulo").textContent = modoSenha
+    ? "Entrar"
+    : "Enviar código";
+  el.btnEnviar.querySelector("use").setAttribute("href", modoSenha ? "#i-check" : "#i-send");
+
+  el.btnAlternar.hidden = !ambos;
+  el.btnAlternar.textContent = modoSenha
+    ? "Prefiro receber um código por e-mail"
+    : "Prefiro entrar com minha senha";
+}
+
 async function carregaMetodos(conta) {
-  el.metodosNota.textContent = "";
-  el.blocoSenha.hidden = true;
-
   if (!conta) return;
-
   try {
     const r = await send("methods", { account: conta });
     metodos = r.methods;
   } catch {
-    return; // conta errada ou sem rede: a UI fica no default e o erro aparece ao tentar
+    metodos = { password: true, accessKey: true };
   }
-
-  el.blocoSenha.hidden = !metodos.password;
-  el.btnEntrar.textContent = metodos.accessKey ? "Enviar código" : "Entrar";
-
-  if (!metodos.accessKey && !metodos.password) {
-    el.metodosNota.textContent =
-      "Esta conta não habilita senha nem código de acesso na loja virtual.";
-  } else if (!metodos.accessKey) {
-    el.metodosNota.textContent = "Esta conta só aceita senha.";
-  } else if (!metodos.password) {
-    el.metodosNota.textContent = "Esta conta só aceita código de acesso.";
-  }
+  aplicaModo();
 }
 
-/* -------------------------------------------------------------------------- */
+function iniciaContagem() {
+  clearInterval(contadorReenvio);
+  let restam = SEGUNDOS_PARA_REENVIAR;
+
+  const tique = () => {
+    if (restam > 0) {
+      el.btnReenviar.disabled = true;
+      el.btnReenviar.textContent = `Reenviar em ${restam}s`;
+      restam -= 1;
+    } else {
+      clearInterval(contadorReenvio);
+      el.btnReenviar.disabled = false;
+      el.btnReenviar.textContent = "Não recebeu? Reenviar";
+    }
+  };
+
+  tique();
+  contadorReenvio = setInterval(tique, 1000);
+}
 
 async function atualiza() {
   const estado = await send("status");
 
-  // Service worker velho: os campos não batem e a tela mostraria "undefined".
   if (estado.protocolo !== PROTOCOLO) {
-    el.alvo.textContent = "versão desencontrada";
     el.ambiente.hidden = true;
     el.foraMotivo.textContent = RECARREGUE;
-    mostrar("fora");
+    mostrar(el.telaFora);
     return;
   }
 
   if (!estado.ok) {
-    el.alvo.textContent = estado.hostname ?? "sem aba";
     el.ambiente.hidden = true;
-    const motivo = estado.motivo ?? "não é um alvo válido.";
-    el.foraMotivo.textContent = estado.hostname
-      ? `${estado.hostname} ${motivo}`
-      : motivo;
-    mostrar("fora");
+    el.foraMotivo.textContent =
+      estado.motivo ?? "Esta aba não é uma loja em ambiente de teste.";
+    mostrar(el.telaFora);
     return;
   }
 
   alvo = estado;
-  el.alvo.textContent = estado.origin.replace(/^https?:\/\//, "");
   el.ambiente.textContent = estado.rotulo;
   el.ambiente.dataset.tipo = estado.tipo;
   el.ambiente.hidden = false;
 
-  // Vem do background quando um login deu certo e a loja apagou a sessão.
-  aviso(estado.aviso);
   el.conta.value = estado.account;
-  el.contaNota.textContent = {
-    manual: "definida por você — apague o campo para voltar a detectar",
-    subdominio: "lida do endereço do preview — exata",
-    html: "detectada na página — edite se estiver errada",
-    desconhecida: "não foi possível detectar; informe a conta",
-  }[estado.origem];
+  el.lojaNome.textContent = estado.account || "loja não identificada";
+  el.campoLoja.hidden = Boolean(estado.account);
 
-  // Codigo ja pedido e popup reaberto: retoma exatamente onde parou. E o caminho
-  // normal, nao a excecao — voce fechou o popup para ir ao e-mail.
+  aviso(estado.aviso);
+
   if (estado.pending) {
     el.codigoEmail.textContent = estado.pending;
-    mostrar("codigo");
+    mostrar(el.telaCodigo);
+    iniciaContagem();
     el.codigo.focus();
     return;
   }
 
   if (estado.session) {
     desenhaSessao(estado.session);
-    mostrar("logado");
+    mostrar(el.telaConectado);
     return;
   }
 
-  mostrar("entrar");
+  mostrar(el.telaEmail);
   await carregaMetodos(estado.account);
   el.email.focus();
 }
 
-/* -------------------------------------------------------------------------- */
+async function pedirCodigo(email, conta) {
+  await send("sendCode", { account: conta, email });
+  el.codigoEmail.textContent = email;
+  el.codigo.value = "";
+  mostrar(el.telaCodigo);
+  iniciaContagem();
+  el.codigo.focus();
+  sucesso("Código enviado. Ele vale por uma única vez.");
+}
 
-el.conta.addEventListener("change", async () => {
-  const conta = el.conta.value.trim();
-  if (!alvo) return;
+async function concluir(mensagem) {
+  sucesso(mensagem);
+  setTimeout(atualiza, 700);
+}
 
-  // Fixa a correcao para esta origem — senao a heuristica a desfaz no proximo
-  // desenho da tela.
-  if (conta) {
-    await send("setAccount", { origin: alvo.origin, account: conta });
-  } else {
-    await send("clearAccount");
-  }
-
-  await atualiza();
-});
-
-el.btnEntrar.addEventListener("click", () => {
+el.btnEnviar.addEventListener("click", () => {
   const email = el.email.value.trim();
-  const senha = el.senha.value;
   const conta = el.conta.value.trim();
 
-  if (!conta) return erro("Informe a conta VTEX.");
-  if (!email.includes("@")) return erro("Informe um e-mail válido.");
+  if (!conta) return erro("Informe qual é a loja no rodapé.");
+  if (!email.includes("@")) return erro("Digite um e-mail válido.");
 
-  // Senha preenchida vence: e o caminho instantaneo, sem ida ao e-mail.
-  if (senha) {
-    return comBotao(el.btnEntrar, "entrando…", async () => {
+  return comCarregando(el.btnEnviar, async () => {
+    if (modoSenha) {
+      if (!el.senha.value) throw new Error("Digite sua senha.");
       await send("loginPassword", {
         origin: alvo.origin,
         account: conta,
         email,
-        password: senha,
+        password: el.senha.value,
         tabId: alvo.tabId,
       });
-      el.senha.value = ""; // a senha nao sobrevive ao popup (ADR-0003)
-      ok(`Entrou como ${email}. Recarregando a loja…`);
-      setTimeout(atualiza, 600);
-    });
-  }
-
-  if (!metodos.accessKey) {
-    return erro("Esta conta não aceita código de acesso. Informe a senha.");
-  }
-
-  return comBotao(el.btnEntrar, "enviando…", async () => {
-    await send("sendCode", { account: conta, email });
-    el.codigoEmail.textContent = email;
-    mostrar("codigo");
-    el.codigo.focus();
-    ok("Código enviado. Ele vale uma vez só.");
+      el.senha.value = "";
+      return concluir("Conectado. Atualizando a loja…");
+    }
+    return pedirCodigo(email, conta);
   });
 });
 
-el.btnCodigo.addEventListener("click", () => {
+el.btnEntrar.addEventListener("click", () => {
   const codigo = el.codigo.value.trim();
-  if (codigo.length < 6) return erro("Informe os 6 dígitos.");
+  if (codigo.length < 6) return erro("O código tem 6 dígitos.");
 
-  return comBotao(el.btnCodigo, "entrando…", async () => {
-    const r = await send("loginCode", {
+  return comCarregando(el.btnEntrar, async () => {
+    await send("loginCode", {
       origin: alvo.origin,
       account: el.conta.value.trim(),
       accessKey: codigo,
       tabId: alvo.tabId,
     });
-    ok(`Entrou como ${r.user}. Recarregando a loja…`);
-    setTimeout(atualiza, 600);
+    return concluir("Conectado. Atualizando a loja…");
   });
 });
 
+el.btnReenviar.addEventListener("click", () =>
+  comCarregando(el.btnEnviar, () =>
+    pedirCodigo(el.codigoEmail.textContent, el.conta.value.trim())
+  )
+);
+
 el.btnVoltar.addEventListener("click", async () => {
+  clearInterval(contadorReenvio);
   await send("cancel");
   el.codigo.value = "";
   await atualiza();
 });
 
 el.btnSair.addEventListener("click", () =>
-  comBotao(el.btnSair, "saindo…", async () => {
+  comCarregando(el.btnSair, async () => {
     await send("logout", {
       origin: alvo.origin,
       account: el.conta.value.trim(),
@@ -326,24 +306,42 @@ el.btnSair.addEventListener("click", () =>
     });
     el.email.value = "";
     el.codigo.value = "";
-    setTimeout(atualiza, 400);
+    return concluir("Você saiu da conta.");
   })
 );
 
-// Enter envia o formulario da vez.
+el.btnAlternar.addEventListener("click", () => {
+  modoSenha = !modoSenha;
+  limpaFaixas();
+  aplicaModo();
+  (modoSenha ? el.senha : el.email).focus();
+});
+
+el.btnEditarLoja.addEventListener("click", () => {
+  el.campoLoja.hidden = !el.campoLoja.hidden;
+  if (!el.campoLoja.hidden) el.conta.focus();
+});
+
+el.conta.addEventListener("change", async () => {
+  const conta = el.conta.value.trim();
+  if (!alvo) return;
+  await send(conta ? "setAccount" : "clearAccount", { origin: alvo.origin, account: conta });
+  await atualiza();
+});
+
+el.codigo.addEventListener("input", () => {
+  el.codigo.value = el.codigo.value.replace(/\D/g, "").slice(0, 6);
+  if (el.codigo.value.length === 6) el.btnEntrar.click();
+});
+
 for (const [campo, botao] of [
-  [el.email, el.btnEntrar],
-  [el.senha, el.btnEntrar],
-  [el.codigo, el.btnCodigo],
+  [el.email, el.btnEnviar],
+  [el.senha, el.btnEnviar],
+  [el.conta, el.btnEnviar],
 ]) {
   campo.addEventListener("keydown", (e) => {
     if (e.key === "Enter") botao.click();
   });
 }
-
-// So digito no campo de codigo.
-el.codigo.addEventListener("input", () => {
-  el.codigo.value = el.codigo.value.replace(/\D/g, "");
-});
 
 atualiza().catch((e) => erro(e.message));
