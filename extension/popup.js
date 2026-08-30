@@ -86,12 +86,17 @@ function aviso(texto) {
   el.aviso.open = false;
 }
 
-async function comCarregando(botao, fn) {
+async function comCarregando(botao, textoOcupado, fn) {
   const rotulo = botao.querySelector(".rotulo");
+  const icone = botao.querySelector(".ic-acao");
+  const spinner = botao.querySelector(".girando");
   const textoOriginal = rotulo?.textContent;
+
   botao.disabled = true;
   botao.classList.add("ocupado");
-  if (rotulo) rotulo.textContent = "Aguarde…";
+  icone?.toggleAttribute("hidden", true);
+  spinner?.toggleAttribute("hidden", false);
+  if (rotulo) rotulo.textContent = textoOcupado;
   limpaFaixas();
 
   try {
@@ -101,6 +106,8 @@ async function comCarregando(botao, fn) {
   } finally {
     botao.disabled = false;
     botao.classList.remove("ocupado");
+    icone?.toggleAttribute("hidden", false);
+    spinner?.toggleAttribute("hidden", true);
     if (rotulo && textoOriginal) rotulo.textContent = textoOriginal;
   }
 }
@@ -143,7 +150,7 @@ function aplicaModo() {
   el.btnEnviar.querySelector(".rotulo").textContent = modoSenha
     ? "Entrar"
     : "Enviar código";
-  el.btnEnviar.querySelector("use").setAttribute("href", modoSenha ? "#i-check" : "#i-send");
+  el.btnEnviar.querySelector(".ic-acao use").setAttribute("href", modoSenha ? "#i-check" : "#i-send");
 
   el.btnAlternar.hidden = !ambos;
   el.btnAlternar.textContent = modoSenha
@@ -252,7 +259,7 @@ el.btnEnviar.addEventListener("click", () => {
   if (!conta) return erro("Informe qual é a loja no rodapé.");
   if (!email.includes("@")) return erro("Digite um e-mail válido.");
 
-  return comCarregando(el.btnEnviar, async () => {
+  return comCarregando(el.btnEnviar, modoSenha ? "Entrando…" : "Enviando…", async () => {
     if (modoSenha) {
       if (!el.senha.value) throw new Error("Digite sua senha.");
       await send("loginPassword", {
@@ -273,7 +280,7 @@ el.btnEntrar.addEventListener("click", () => {
   const codigo = el.codigo.value.trim();
   if (codigo.length < 6) return erro("O código tem 6 dígitos.");
 
-  return comCarregando(el.btnEntrar, async () => {
+  return comCarregando(el.btnEntrar, "Entrando…", async () => {
     await send("loginCode", {
       origin: alvo.origin,
       account: el.conta.value.trim(),
@@ -284,11 +291,19 @@ el.btnEntrar.addEventListener("click", () => {
   });
 });
 
-el.btnReenviar.addEventListener("click", () =>
-  comCarregando(el.btnEnviar, () =>
-    pedirCodigo(el.codigoEmail.textContent, el.conta.value.trim())
-  )
-);
+el.btnReenviar.addEventListener("click", async () => {
+  el.btnReenviar.disabled = true;
+  el.btnReenviar.textContent = "Enviando…";
+  limpaFaixas();
+
+  try {
+    await pedirCodigo(el.codigoEmail.textContent, el.conta.value.trim());
+  } catch (e) {
+    erro(e.message);
+    el.btnReenviar.disabled = false;
+    el.btnReenviar.textContent = "Não recebeu? Reenviar";
+  }
+});
 
 el.btnVoltar.addEventListener("click", async () => {
   clearInterval(contadorReenvio);
@@ -298,7 +313,7 @@ el.btnVoltar.addEventListener("click", async () => {
 });
 
 el.btnSair.addEventListener("click", () =>
-  comCarregando(el.btnSair, async () => {
+  comCarregando(el.btnSair, "Saindo…", async () => {
     await send("logout", {
       origin: alvo.origin,
       account: el.conta.value.trim(),

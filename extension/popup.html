@@ -40,6 +40,10 @@
         <path d="M14 4h4.5A1.5 1.5 0 0 1 20 5.5v13a1.5 1.5 0 0 1-1.5 1.5H14" />
         <path d="M10 8l-4 4 4 4M6.5 12H15" />
       </symbol>
+      <symbol id="i-spinner" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="9" opacity=".28" />
+        <path d="M21 12a9 9 0 0 0-9-9" />
+      </symbol>
       <symbol id="i-send" viewBox="0 0 24 24">
         <path d="M4 11.5l16-7-7 16-2.2-6.6z" />
       </symbol>
@@ -98,7 +102,8 @@
         </div>
 
         <button id="btn-enviar" class="acao">
-          <svg class="ic"><use href="#i-send" /></svg>
+          <svg class="ic ic-acao"><use href="#i-send" /></svg>
+          <svg class="ic girando" hidden><use href="#i-spinner" /></svg>
           <span class="rotulo">Enviar código</span>
         </button>
 
@@ -119,7 +124,8 @@
                aria-label="Código de 6 dígitos" />
 
         <button id="btn-entrar" class="acao">
-          <svg class="ic"><use href="#i-check" /></svg>
+          <svg class="ic ic-acao"><use href="#i-check" /></svg>
+          <svg class="ic girando" hidden><use href="#i-spinner" /></svg>
           <span class="rotulo">Entrar</span>
         </button>
 
@@ -146,7 +152,8 @@
         </div>
 
         <button id="btn-sair" class="acao secundaria">
-          <svg class="ic"><use href="#i-exit" /></svg>
+          <svg class="ic ic-acao"><use href="#i-exit" /></svg>
+          <svg class="ic girando" hidden><use href="#i-spinner" /></svg>
           <span class="rotulo">Sair desta conta</span>
         </button>
       </section>
