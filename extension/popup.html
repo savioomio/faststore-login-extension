@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <h1>VTEX Dev Login</h1>
+      <p class="alvo">
+        <span id="ambiente" class="tag" hidden></span>
+        <span id="alvo">verificando…</span>
+      </p>
+    </header>
+
+    <!-- aba fora de alcance -->
+    <section id="tela-fora" hidden>
+      <p class="aviso" id="fora-motivo"></p>
+      <p class="nota">
+        A extensão age em <code>localhost</code>, <code>127.0.0.1</code> e nos
+        previews <code>*.vtex.app</code>. Em produção ela não é necessária: lá o
+        domínio é unificado e o login da loja já funciona sozinho.
+      </p>
+    </section>
+
+    <!-- configuração de conta -->
+    <section id="tela-conta" hidden>
+      <label for="conta">Conta VTEX</label>
+      <input id="conta" type="text" placeholder="boldb2b" autocomplete="off" spellcheck="false" />
+      <p id="conta-nota" class="nota"></p>
+    </section>
+
+    <!-- já logado -->
+    <section id="tela-logado" hidden>
+      <div class="sessao">
+        <span class="rotulo">logado como</span>
+        <strong id="sessao-user"></strong>
+        <dl id="sessao-detalhes"></dl>
+      </div>
+      <button id="btn-sair" class="secundario">Sair e limpar cookie</button>
+    </section>
+
+    <!-- pedir código / senha -->
+    <section id="tela-entrar" hidden>
+      <label for="email">E-mail do usuário</label>
+      <input id="email" type="email" placeholder="usuario@exemplo.com" autocomplete="off" spellcheck="false" />
+
+      <div id="bloco-senha" hidden>
+        <label for="senha">Senha <span class="opcional">(opcional — deixe vazio para receber código)</span></label>
+        <input id="senha" type="password" autocomplete="off" />
+      </div>
+
+      <button id="btn-entrar">Enviar código</button>
+      <p id="metodos-nota" class="nota"></p>
+    </section>
+
+    <!-- digitar código -->
+    <section id="tela-codigo" hidden>
+      <p class="enviado">
+        Código enviado para <strong id="codigo-email"></strong>.
+      </p>
+      <label for="codigo">Código de 6 dígitos</label>
+      <input id="codigo" type="text" inputmode="numeric" maxlength="6" placeholder="000000" autocomplete="off" />
+      <button id="btn-codigo">Entrar</button>
+      <button id="btn-voltar" class="link">Usar outro e-mail</button>
+    </section>
+
+    <p id="erro" class="erro" hidden></p>
+    <p id="ok" class="ok" hidden></p>
+    <p id="aviso" class="aviso-box" hidden></p>
+
+    <script type="module" src="popup.js"></script>
+  </body>
+</html>

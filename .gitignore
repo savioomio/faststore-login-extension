@@ -1,0 +1,27 @@
+# macOS
+.DS_Store
+
+# Editores
+.vscode/
+.idea/
+*.swp
+
+# Node — não há dependências neste projeto (a extensão é JS puro, sem build),
+# mas as linhas ficam para o caso de alguém rodar algo aqui dentro.
+node_modules/
+npm-debug.log*
+yarn-error.log*
+
+# Empacotamento da extensão para distribuição
+*.zip
+*.crx
+*.pem
+
+# ⚠️ Rascunhos de teste. Qualquer arquivo com resposta CRUA do VTEX ID pode
+# conter JWT, código de acesso ou identificador de usuário real — nada disso
+# entra em commit (docs/rules/seguranca.md, R-4).
+*.local.*
+scratch/
+tmp/
+jar.txt
+cookies.txt

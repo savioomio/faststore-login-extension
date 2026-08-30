@@ -1,0 +1,224 @@
+:root {
+  color-scheme: light dark;
+  --fg: #16181d;
+  --fg-fraco: #6b7280;
+  --bg: #ffffff;
+  --borda: #e2e5ea;
+  --campo: #ffffff;
+  --acao: #1a1c22;
+  --acao-fg: #ffffff;
+  --erro: #b42318;
+  --erro-bg: #fef3f2;
+  --ok: #067647;
+  --ok-bg: #ecfdf3;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fg: #e8eaee;
+    --fg-fraco: #9aa1ad;
+    --bg: #16181d;
+    --borda: #2c3038;
+    --campo: #1f2229;
+    --acao: #e8eaee;
+    --acao-fg: #16181d;
+    --erro: #f97066;
+    --erro-bg: #2a1614;
+    --ok: #47cd89;
+    --ok-bg: #10241a;
+  }
+}
+
+* { box-sizing: border-box; }
+
+body {
+  width: 320px;
+  margin: 0;
+  padding: 14px;
+  background: var(--bg);
+  color: var(--fg);
+  font: 13px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+}
+
+header { margin-bottom: 12px; }
+
+h1 {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+.alvo {
+  margin: 2px 0 0;
+  font-size: 11px;
+  color: var(--fg-fraco);
+  font-variant-numeric: tabular-nums;
+}
+
+section { margin-bottom: 12px; }
+section[hidden] { display: none !important; }
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--fg-fraco);
+}
+
+.opcional { font-weight: 400; text-transform: none; }
+
+input {
+  width: 100%;
+  padding: 7px 9px;
+  margin-bottom: 9px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--campo);
+  color: var(--fg);
+  font: inherit;
+}
+
+input:focus {
+  outline: 2px solid var(--acao);
+  outline-offset: -1px;
+}
+
+#codigo {
+  font-size: 20px;
+  letter-spacing: 0.32em;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+button {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid var(--acao);
+  border-radius: 6px;
+  background: var(--acao);
+  color: var(--acao-fg);
+  font: inherit;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+button:hover:not(:disabled) { opacity: 0.88; }
+button:disabled { opacity: 0.45; cursor: default; }
+
+button.secundario {
+  background: transparent;
+  color: var(--fg);
+  border-color: var(--borda);
+}
+
+button.link {
+  margin-top: 6px;
+  padding: 4px;
+  border: 0;
+  background: none;
+  color: var(--fg-fraco);
+  font-size: 11px;
+  text-decoration: underline;
+}
+
+.sessao {
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--campo);
+}
+
+.rotulo {
+  display: block;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--fg-fraco);
+}
+
+.sessao strong {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  word-break: break-all;
+}
+
+dl {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 2px 8px;
+  margin: 8px 0 0;
+  font-size: 11px;
+}
+
+dt { color: var(--fg-fraco); }
+dd { margin: 0; font-variant-numeric: tabular-nums; word-break: break-all; }
+
+.nota {
+  margin: 0;
+  font-size: 11px;
+  color: var(--fg-fraco);
+}
+
+.enviado { margin: 0 0 10px; font-size: 12px; }
+.enviado strong { word-break: break-all; }
+
+.aviso { margin: 0 0 6px; font-size: 12px; }
+
+code {
+  padding: 1px 4px;
+  border-radius: 3px;
+  background: var(--campo);
+  border: 1px solid var(--borda);
+  font-size: 11px;
+}
+
+.erro, .ok {
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 11.5px;
+}
+
+.erro { background: var(--erro-bg); color: var(--erro); }
+.ok { background: var(--ok-bg); color: var(--ok); }
+
+/* Diagnóstico longo (ex.: a loja apagou o cookie). Texto, não uma linha só. */
+.aviso-box {
+  margin: 8px 0 0;
+  padding: 9px 10px;
+  border: 1px solid var(--borda);
+  border-radius: 6px;
+  background: var(--campo);
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--fg);
+}
+
+.aviso-box code {
+  font-size: 10.5px;
+  padding: 0 3px;
+}
+
+/* Etiqueta de ambiente: preview merece destaque, local é o caso normal. */
+.tag {
+  display: inline-block;
+  margin-right: 5px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  border: 1px solid var(--borda);
+  font-size: 9.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  vertical-align: 1px;
+}
+
+.tag[data-tipo="preview"] {
+  border-color: transparent;
+  background: var(--acao);
+  color: var(--acao-fg);
+}

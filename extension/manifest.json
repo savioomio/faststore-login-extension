@@ -1,0 +1,26 @@
+{
+  "manifest_version": 3,
+  "name": "VTEX Dev Login",
+  "version": "0.1.0",
+  "description": "Loga um usuario VTEX numa loja em localhost ou num preview .vtex.app, sem copiar cookie do DevTools na mao.",
+  "permissions": [
+    "cookies",
+    "storage",
+    "tabs",
+    "scripting"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "http://127.0.0.1/*",
+    "https://*.vtex.app/*",
+    "https://*.myvtex.com/*"
+  ],
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "VTEX Dev Login"
+  }
+}
