@@ -6,7 +6,7 @@ let f = 0
 const t = (n, c, e='') => { console.log(`  ${c?'ok  ':'FALHOU '} ${n}${e?' — '+e:''}`); if(!c) f++ }
 
 // --- extrai a função injetada do arquivo real, sem duplicá-la aqui ---
-const src = readFileSync(new URL('../sessao-da-pagina.js', import.meta.url), 'utf8')
+const src = readFileSync(new URL('../../extension/sessao-da-pagina.js', import.meta.url), 'utf8')
 const inicio = src.indexOf('async function limparNaPagina')
 const fim = src.indexOf('\n}', src.indexOf('return resultado;\n}', inicio)) + 2
 const corpo = src.slice(inicio, fim)

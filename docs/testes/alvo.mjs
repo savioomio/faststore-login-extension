@@ -1,4 +1,4 @@
-import { classificaHost, contaPeloSubdominio, contaPeloHtml } from '../alvo.js'
+import { classificaHost, contaPeloSubdominio, contaPeloHtml } from '../../extension/alvo.js'
 
 let f = 0
 const t = (nome, cond, extra='') => { console.log(`  ${cond?'ok  ':'FALHOU '} ${nome}${extra?' — '+extra:''}`); if(!cond) f++ }

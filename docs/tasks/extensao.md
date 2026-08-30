@@ -145,6 +145,25 @@ e sem revelar se o e-mail existe
 
 ---
 
+## T-013 — Bloqueio temporário caía no erro genérico
+
+**Estado:** corrigida e **verificada** · **Achado** rodando os próprios testes
+
+A VTEX sinaliza bloqueio por tentativas com `401` e corpo em **texto puro**
+(`Seu login está bloqueado temporariamente.`). Como não é JSON, o `errorCodeOf`
+devolvia `HTTP_401`, que não estava mapeado — e a pessoa via *"Não foi possível
+concluir. Tente de novo em alguns instantes."*
+
+**Tentar de novo renova o bloqueio.** A mensagem mandava fazer exatamente a
+única coisa que piora a situação.
+
+Corrigido: `HTTP_401` mapeado para uma mensagem que diz o tempo de espera e
+desaconselha a nova tentativa. O teste `vtexid.mjs` passa a reconhecer o estado e
+reportá-lo como condição de ambiente. Registrado em
+[`reference/vtex-id.md`](../reference/vtex-id.md) §4.
+
+---
+
 ## T-010 — Preview `.vtex.app`
 
 **Estado:** construída, **falta o teste real** · **Decidida pela** [ADR-0004](../adr/0004-preview-entra-producao-nao.md)
@@ -184,7 +203,7 @@ na troca).
 Custou a permissão `scripting`, que havia sido cortada: é a única forma de
 alcançar o IndexedDB da página.
 
-**Verificado em 2026-08-30** ([`testes/sessao.mjs`](../../extension/testes/sessao.mjs)):
+**Verificado em 2026-08-30** ([`testes/sessao.mjs`](../testes/sessao.mjs)):
 identidade zerada, CEP e locale preservados, flag de prontidão limpa, sessão já
 deslogada não quebra, banco inexistente não é criado.
 

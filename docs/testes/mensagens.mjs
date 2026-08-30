@@ -1,6 +1,6 @@
 // Exercita o background.js REAL com as APIs do chrome mockadas, do jeito que o
 // popup o chama. E o teste que pega "o popup pergunta X e o background responde Y".
-const EXT = new URL('..', import.meta.url).pathname
+const EXT = new URL('../../extension', import.meta.url).pathname
 
 let listener = null
 const store = { local: {}, session: {} }

@@ -85,7 +85,7 @@ separado por isso — dá para ler a regra inteira de uma vez.
 ⚠️ **Teste de sufixo ingênuo é furado.** `localhost.evil.com` termina com
 `.com` mas começa com `localhost`; `evil-vtex.app.com` contém `vtex.app`. Os dois
 são recusados hoje e há teste travando isso — se você mexer na classificação,
-rode `testes/alvo.mjs`.
+rode `docs/testes/alvo.mjs`.
 
 **Descoberta da loja**, em ordem:
 
@@ -193,13 +193,14 @@ diagnóstico que a plataforma não deu, e não revele se o e-mail existe.
 ## Testes
 
 ```bash
-node testes/alvo.mjs        # onde pode agir + descoberta da loja
-node testes/sessao.mjs      # limpeza do IndexedDB
-node testes/mensagens.mjs   # background com o chrome mockado
-node testes/vtexid.mjs      # handshake contra a conta REAL (rede)
+node docs/testes/alvo.mjs        # onde pode agir + descoberta da loja
+node docs/testes/sessao.mjs      # limpeza do IndexedDB
+node docs/testes/mensagens.mjs   # background com o chrome mockado
+node docs/testes/vtexid.mjs      # handshake contra a conta REAL (rede)
 ```
 
 Node puro, sem dependências. **Rode os quatro depois de mexer em qualquer coisa.**
+Detalhe do que cada um cobre: [`docs/testes/README.md`](../testes/README.md).
 
 ⚠️ **Espace os de rede.** `start` tem rate limit de 200 e, após poucas tentativas
 seguidas, a VTEX responde `200` fantasma no `send` **sem enviar e-mail** e

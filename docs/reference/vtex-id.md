@@ -277,6 +277,7 @@ api/authenticator/pub/authentication/setpassword                 404  ❌ não e
 | `InvalidB2BClaims` | Organização sem contrato ativo / usuário sem organização válida | **Só a authenticator emite** |
 | `WeakPassword` / `InvalidPasswordFormat` | Senha fraca | Mapeamento *best-effort*, não confirmado ao vivo |
 | *(corpo vazio + HTTP 403)* | Usuário recém-criado cuja organização/contrato ainda não propagou | Ver §6 |
+| *(HTTP 401, corpo em TEXTO PURO)* | **Bloqueio temporário por tentativas** | ⚠️ O corpo é `Seu login está bloqueado temporariamente.` — **não é JSON**, então um cliente que só faz `JSON.parse` cai no erro genérico. Medido em 2026-08-30 no `accesskey/validate`. Trate `HTTP_401` explicitamente, e **nunca** mande "tente de novo": tentar renova o bloqueio. |
 
 **Política de senha da VTEX** (confirmada em help.vtex.com): mínimo **8 caracteres, 1 número,
 1 maiúscula, 1 minúscula**. Caractere especial **não** é exigido pela VTEX (testado: senha sem

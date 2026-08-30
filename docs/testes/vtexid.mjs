@@ -1,6 +1,6 @@
 // Exercita o codigo REAL da extensao (vtexid.js) e a heuristica de deteccao
 // copiada verbatim do background.js, contra o localhost e a conta de verdade.
-import { start, sendAccessKey, loginWithAccessKey, loginWithPassword, VtexIdError } from '../vtexid.js'
+import { start, sendAccessKey, loginWithAccessKey, loginWithPassword, VtexIdError } from '../../extension/vtexid.js'
 
 const NAO_E_CONTA = new Set(['vtex','starter','www','io','assets'])
 async function detectAccount(origin) {
@@ -50,8 +50,19 @@ try {
   t('deveria ter lancado', false)
 } catch (e) {
   t('lanca VtexIdError com codigo', e instanceof VtexIdError && !!e.code, `code=${e.code}`)
-  t('mensagem do fluxo de CODIGO cita o uso unico', /única vez|uma única/i.test(e.message))
   console.log(`       "${e.message}"`)
+
+  if (e.code === 'HTTP_401') {
+    // Nao e falha de codigo: a VTEX bloqueou a conta por excesso de tentativas
+    // (justamente o que estes testes provocam). Ver docs/testes/README.md.
+    console.log('       ATENCAO: a conta esta BLOQUEADA temporariamente pela VTEX.')
+    console.log('       Isto e condicao de ambiente, nao defeito do codigo.')
+    console.log('       Espere 15-30 min e rode de novo para valer.')
+    t('avisa sobre o bloqueio, sem mandar tentar de novo',
+      /bloqueou|aguarde|espere/i.test(e.message) && !/^Não foi possível concluir/.test(e.message))
+  } else {
+    t('mensagem do fluxo de CODIGO cita o uso unico', /única vez|uma única/i.test(e.message))
+  }
 }
 
 console.log('\n=== 5. token ausente -> InvalidToken (nao "codigo errado") ===')

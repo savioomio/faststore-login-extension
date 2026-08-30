@@ -113,6 +113,10 @@ tasks/<área>.md, seções ## T-001…      área por arquivo, número por seç�
 ### Tasks
 - [Extensão](tasks/extensao.md)
 
+### Testes
+- [O que cada teste cobre, e o que nenhum cobre](testes/README.md) · ficam aqui,
+  e não em `extension/`, para não irem junto no pacote do navegador.
+
 ---
 
 ## O que **não** mora aqui

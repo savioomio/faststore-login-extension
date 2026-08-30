@@ -70,7 +70,8 @@ sessão foi aceita e a credencial foi avaliada** — que é o que se quer medir.
 | `WrongCredentials` | a sessão **foi** aceita, a credencial é que não presta |
 | corpo vazio no `accesskey/send` | **sucesso** (contraintuitivo) |
 | JSON com `authStatus` no `accesskey/send` | **falha** |
-| `4xx` com corpo **não-JSON** | propagação de usuário/organização — retentar |
+| `401` com corpo em **texto puro** | **bloqueio temporário por tentativas** — pare, não retente |
+| outro `4xx` com corpo **não-JSON** | propagação de usuário/organização — retentar |
 | `4xx` com corpo JSON | falha real — **não** retentar |
 
 Leia sempre `authStatus ?? code ?? error.code`: falhas `4xx` às vezes vêm em

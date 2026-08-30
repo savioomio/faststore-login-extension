@@ -108,15 +108,15 @@ especificação além da evidência que a gente mesmo produziu.
 ## 5. Testes
 
 ```bash
-cd extension
-node testes/alvo.mjs        # onde pode agir + descoberta da conta (puro)
-node testes/sessao.mjs      # limpeza do IndexedDB, contra um duplo da API
-node testes/mensagens.mjs   # background com o chrome mockado, como o popup chama
-node testes/vtexid.mjs      # handshake contra a conta REAL (precisa de rede)
+node docs/testes/alvo.mjs        # onde pode agir + descoberta da loja
+node docs/testes/sessao.mjs      # limpeza da sessão guardada no navegador
+node docs/testes/mensagens.mjs   # o background, como a janelinha o chama
+node docs/testes/vtexid.mjs      # login contra a conta REAL (precisa de rede)
 ```
 
-Sem build, sem dependências: Node puro. **Rode os quatro antes de dizer que
-está pronto.**
+Ficam fora de `extension/` para não irem junto no pacote do navegador. Node puro,
+sem instalar nada. **Rode os quatro antes de dizer que está pronto.** O que cada
+um cobre e o que nenhum cobre: [`docs/testes/README.md`](docs/testes/README.md).
 
 - `mensagens.mjs` pega a classe "o popup pergunta X e o background responde Y" —
   foi escrito depois de ela acontecer.

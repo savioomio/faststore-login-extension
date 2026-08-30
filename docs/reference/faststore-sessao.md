@@ -123,4 +123,4 @@ para "por que diz que estou logado e dá erro".
 - Nada disto foi verificado com um login real ponta a ponta — o comportamento
   descrito vem da leitura do código do framework mais o teste da função de
   limpeza contra um duplo do IndexedDB
-  ([`testes/sessao.mjs`](../../extension/testes/sessao.mjs)).
+  ([`testes/sessao.mjs`](../testes/sessao.mjs)).

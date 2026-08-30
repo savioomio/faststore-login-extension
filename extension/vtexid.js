@@ -128,6 +128,9 @@ const MESSAGES = {
   InvalidToken: "O código expirou. Peça um novo e tente de novo.",
   InvalidEmail: "Digite um e-mail válido.",
   BlockedUser: "Muitas tentativas seguidas. Aguarde de 15 a 30 minutos.",
+  HTTP_401:
+    "Muitas tentativas seguidas: a loja bloqueou este acesso por 15 a 30 minutos. " +
+    "Espere antes de tentar de novo — tentar agora só renova o bloqueio.",
   BlockedHostDomain: "Digite um e-mail válido, com @.",
   InvalidB2BClaims: "Esta conta não tem acesso à loja. Fale com o administrador.",
 };

@@ -69,6 +69,8 @@ está em [`docs/runbooks/mexer-no-codigo.md`](../docs/runbooks/mexer-no-codigo.m
 | `popup.*` | A janelinha. Não faz rede nem toca em cookie. |
 | `icones/` | Gerados por script, sem dependência de imagem externa. |
 
+Tudo nesta pasta — e só isto — é o que o navegador carrega.
+
 ### Permissões: ler e escrever são coisas diferentes
 
 O `*.myvtex.com` no manifesto engana — ele **não** é para escrever sessão lá:
@@ -87,13 +89,12 @@ Quem manda em onde se **escreve** é o `alvo.js`, não o manifesto.
 
 ### Testes
 
+Ficam em [`docs/testes/`](../docs/testes/), fora desta pasta, para não irem junto
+no pacote do navegador. Rode os quatro depois de mexer em qualquer coisa:
+
 ```bash
-node testes/alvo.mjs        # onde pode agir + descoberta da loja
-node testes/sessao.mjs      # limpeza da sessão do navegador
-node testes/mensagens.mjs   # o background, como a janelinha o chama
-node testes/vtexid.mjs      # login contra a conta REAL (precisa de rede)
+node docs/testes/alvo.mjs
+node docs/testes/sessao.mjs
+node docs/testes/mensagens.mjs
+node docs/testes/vtexid.mjs
 ```
-
-Node puro, sem instalar nada. Rode os quatro depois de mexer em qualquer coisa.
-
-⚠️ **Espace os de rede** — ver o bloqueio por tentativas na tabela acima.

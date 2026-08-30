@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "faststore-login-extension",
+  "name": "FastStore Login",
   "version": "0.1.0",
   "description": "Entre na loja em ambiente de teste com seu e-mail e um codigo, sem precisar copiar nada do DevTools.",
   "icons": {
@@ -27,7 +27,7 @@
   },
   "action": {
     "default_popup": "popup.html",
-    "default_title": "faststore-login-extension",
+    "default_title": "FastStore Login",
     "default_icon": {
       "16": "icones/16.png",
       "32": "icones/32.png",
