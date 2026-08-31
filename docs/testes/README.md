@@ -47,6 +47,14 @@ background não devolvia mais, e a tela mostrava `undefined`. Este teste pega es
 classe inteira — inclusive a exigência de que toda recusa venha com um motivo em
 frase completa e sem jargão.
 
+Cobre também o caso **"aba fora dos `host_permissions`"**: sem a permissão `tabs`,
+o Chrome entrega `tab.url` como `undefined` numa aba qualquer, e a resposta tem de
+ser a mesma recusa de host não coberto
+([T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto)).
+⚠️ Este teste roda contra um `chrome` **mockado** — ele prova o que o
+`background.js` faz com um `url` ausente, **não** que o Chrome real omita o campo.
+Isso se confere no navegador.
+
 ### `vtexid.mjs` — o handshake, contra a conta real
 
 Precisa de rede. Exercita **só caminhos de falha**, com credencial errada de

@@ -71,6 +71,15 @@ for (const u of ['https://loja.bold.net/','https://exemplo.com/']) {
   t(`${u} recusado com motivo`, data.ok === false && typeof data.motivo === 'string', data.motivo?.slice(0,45))
 }
 
+console.log('\n=== aba fora dos host_permissions: a URL nao chega ===')
+// Sem a permissao `tabs`, o Chrome so preenche `tab.url` nas abas cobertas pelos
+// host_permissions. Numa aba qualquer o campo vem `undefined` — e a resposta tem
+// de ser a mesma de host recusado, nao um "nenhuma aba aberta" que engana.
+abaUrl = undefined
+;({ data } = await chamar({ action: 'status' }))
+t('recusa', data.ok === false)
+t('motivo diz que a aba nao e uma loja', /nao e uma loja|não é uma loja/i.test(data.motivo ?? ''), data.motivo)
+
 console.log('\n=== ciclo cookie: injeta, lê, apaga ===')
 abaUrl = 'https://boldb2b.vtex.app/'
 const jwtFake = 'a.' + Buffer.from(JSON.stringify({sub:'teste@exemplo.com',account:'boldb2b',exp:Math.floor(Date.now()/1000)+86399})).toString('base64url') + '.z'

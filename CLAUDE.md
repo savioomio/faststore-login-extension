@@ -22,13 +22,15 @@ documento, não escreva no fonte.
 | O que já foi medido, e como | [`docs/research/`](docs/research/) |
 | O que falta fazer | [`docs/tasks/extensao.md`](docs/tasks/extensao.md) |
 | Como a extensão se usa | [`extension/README.md`](extension/README.md) |
+| Como publicar na Chrome Web Store | [`docs/runbooks/publicar-na-chrome-web-store.md`](docs/runbooks/publicar-na-chrome-web-store.md) |
+| O que a extensão faz com os dados de quem usa | [`PRIVACIDADE.md`](PRIVACIDADE.md) |
 
 **Você não precisa pesquisar a API do VTEX ID nem inventar endpoint.** A
 reference tem tudo, e cada afirmação dela traz o `curl` que a prova.
 
 ---
 
-## 2. Sete coisas que já custaram caro
+## 2. Oito coisas que já custaram caro
 
 Não são preferências. Cada uma quebrou alguma coisa de um jeito que **parecia
 outro problema**.
@@ -55,13 +57,20 @@ outro problema**.
    Nunca escreva mensagem que revele se o e-mail existe. Ao depurar, elimine
    primeiro a causa banal: o código é de **uso único**.
 
-6. **O service worker do MV3 morre sozinho** (~30s de ociosidade) e **sobrevive a
+6. **Permissão que não é mais necessária sai do manifesto.** `tabs` saiu em
+   2026-08-31: os `host_permissions` já entregam `tab.url` nas abas que
+   interessam. O efeito colateral é que numa aba **fora** deles o Chrome devolve
+   `tab.url` como `undefined` — e a resposta certa é a recusa normal ("não é uma
+   loja"), não "nenhuma aba aberta". Hoje são `cookies`, `storage`, `scripting` e
+   quatro hosts. Ver [R-8](docs/rules/seguranca.md#r-8--permissões-da-extensão-o-mínimo-que-funciona).
+
+7. **O service worker do MV3 morre sozinho** (~30s de ociosidade) e **sobrevive a
    editar arquivos**. Por isso o `authenticationToken` vive em
    `chrome.storage.session`, e por isso existe o `PROTOCOLO` entre popup e
    background — se você mudar o formato das mensagens, **suba o número**, senão a
    tela mostra `undefined` em vez de "recarregue a extensão".
 
-7. **Nada de segredo em log, documento ou commit.** Nem JWT, nem código, nem
+8. **Nada de segredo em log, documento ou commit.** Nem JWT, nem código, nem
    senha — mesmo expirados, mesmo de teste. Um JWT da VTEX carrega `userId`,
    `customerId`, `unitId` e a conta.
 
@@ -99,7 +108,7 @@ especificação além da evidência que a gente mesmo produziu.
   que fazem você concluir a coisa errada se ignorados.
 
 > Já aconteceu de uma regra deste repo estar **errada por dedução** — a
-> [R-2](docs/rules/seguranca.md#️-correção-de-uma-versão-anterior-desta-regra)
+> [R-2](docs/rules/seguranca.md#-correção-de-uma-versão-anterior-desta-regra)
 > afirmava, sem medir, que o framework sobrescrevia o cookie fora de localhost.
 > A correção ficou registrada de propósito. Ler o código não substitui medir.
 

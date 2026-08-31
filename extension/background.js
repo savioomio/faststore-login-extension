@@ -32,7 +32,7 @@ async function descobreLoja(origin, hostname) {
 
 async function detectaAlvo() {
   const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-  if (!tab?.url) return { ok: false, motivo: "Nenhuma aba aberta." };
+  if (!tab?.url) return classificaHost("");
 
   let url;
   try {

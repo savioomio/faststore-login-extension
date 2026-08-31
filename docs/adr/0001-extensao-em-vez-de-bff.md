@@ -78,7 +78,7 @@ justamente o passo chato. E não faz logout nem troca de conta.
   publicada. Aceitável: é ferramenta interna de time.
 - **Uma ferramenta que escreve cookie de sessão é sensível por natureza.** Por
   isso ela é restrita a `localhost`/`127.0.0.1`
-  ([R-2](../rules/seguranca.md#r-2--a-extensão-só-existe-para-ambiente-local)) e
+  ([R-2](../rules/seguranca.md#r-2--a-extensão-age-em-desenvolvimento-e-preview-não-em-produção)) e
   nunca vê `appKey`/`appToken`
   ([R-1](../rules/seguranca.md#r-1--nada-de-appkey--apptoken-na-extensão-nunca)).
 
