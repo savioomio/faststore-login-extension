@@ -10,20 +10,27 @@ Origem de quase tudo aqui: [research 2026-08-30](../research/2026-08-30-viabilid
 
 ## T-001 — Esqueleto da extensão MV3
 
-**Estado:** construída, **falta carregar no navegador** · commit inicial 2026-08-30
+**Estado:** **fechada** — verificada pelo operador em 2026-08-31 · commit inicial 2026-08-30
 
-`extension/manifest.json` com três permissões (`cookies`, `storage`, `tabs`) e
-três hosts. `scripting` foi cortado: a detecção da conta lê o HTML por `fetch`,
-que já é coberto pelo host permission de localhost.
+`extension/manifest.json`. O conjunto de permissões mudou duas vezes desde o
+commit inicial, e as duas mudanças estão registradas:
 
-**Pronto quando:** a extensão carrega em `chrome://extensions` sem aviso, e o
-popup abre. ⬅️ **falta você fazer isto**
+- `scripting` **entrou** em [T-012](#t-012--deslogar-de-verdade-a-sessão-do-indexeddb):
+  é a única forma de alcançar o IndexedDB da página, e sem ela o logout não
+  desloga a interface;
+- `tabs` **saiu** em [T-014](#t-014--a-permissão-tabs-saiu-do-manifesto): os
+  `host_permissions` já entregam `tab.url` nas abas que interessam.
+
+Hoje: `cookies`, `storage`, `scripting` e quatro hosts. Sem `<all_urls>`.
+
+**Verificado:** a extensão carrega em `chrome://extensions` sem aviso e o popup
+abre — operador, 2026-08-31.
 
 ---
 
 ## T-002 — Handshake do VTEX ID no service worker
 
-**Estado:** construído, **falta o teste real** · **Depende de:** [ADR-0002](../adr/0002-handshake-stateless-token-no-corpo.md)
+**Estado:** **fechada** — login bem-sucedido verificado pelo operador em 2026-08-31 · **Depende de:** [ADR-0002](../adr/0002-handshake-stateless-token-no-corpo.md)
 
 `start` → `accesskey/send` → `accesskey/validate`, tudo com `credentials: 'omit'`
 e `authenticationToken` no corpo. Mais `classic/validate` para o caminho de senha.
@@ -43,16 +50,20 @@ conta `boldb2b` (o mesmo código que a extensão executa):
 - ✅ código errado → `WrongCredentials`, mensagem citando o uso único;
 - ✅ sem token → `InvalidToken`, distinto de credencial ruim.
 
-**Ainda não verificado — e é o que fecha a task:** um login **bem-sucedido**.
-Exige e-mail de usuário real da conta e acesso à caixa de entrada. É o teste que
-a research também não pôde fazer (§6 de lá), e nenhum dos anteriores o substitui:
-todos exercitam o caminho de **falha**.
+**Verificado em 2026-08-31 pelo operador:** o login **bem-sucedido** ponta a
+ponta, à mão, no navegador. Era o que faltava — todos os testes anteriores, e a
+research, exercitavam só o caminho de **falha**.
+
+⚠️ **Nenhum teste automatizado cobre isso, e continua assim.** Automatizar
+exigiria consumir código de acesso de usuário real
+([`testes/README.md`](../testes/README.md)). Mexeu no `vtexid.js` ou no
+`background.js`? O login real se refaz **à mão**.
 
 ---
 
 ## T-003 — Injeção do cookie e reload
 
-**Estado:** construída, **falta o teste real** · **Depende de:** T-002
+**Estado:** **fechada** — verificada pelo operador em 2026-08-31 · **Depende de:** T-002
 
 `chrome.cookies.set` de `VtexIdclientAutCookie_<conta>` em `http://localhost:<porta>`,
 seguido de `chrome.tabs.reload`. Mais o inverso: botão de logout que faz
@@ -67,7 +78,7 @@ VTEX (é o mesmo app `vtex.my-wishlists` — ver
 
 ## T-004 — Logout, e a troca de usuário
 
-**Estado:** construída, **falta o teste real** · **Depende de:** T-003 · **Decidida pela** [ADR-0003](../adr/0003-sem-cofre-de-credenciais.md)
+**Estado:** **fechada** — verificada pelo operador em 2026-08-31 · **Depende de:** T-003 · **Decidida pela** [ADR-0003](../adr/0003-sem-cofre-de-credenciais.md)
 
 Botão que apaga o cookie (`chrome.cookies.remove`) e recarrega a aba.
 
@@ -82,7 +93,7 @@ logo em seguida dá para entrar com outro e-mail sem passo manual nenhum.
 
 ## T-005 — De onde vem a conta e a porta
 
-**Estado:** construída e **verificada** · **Decidida** em 2026-08-30
+**Estado:** **fechada** — heurística medida em 2026-08-30, campo editável conferido na tela pelo operador em 2026-08-31 · **Decidida** em 2026-08-30
 
 **Detectar e deixar corrigir.** A extensão lê a conta da página aberta
 (`__NEXT_DATA__` / `discovery.config`) e a porta da aba atual, e mostra os dois
@@ -97,13 +108,14 @@ calada, que era o defeito da detecção pura.
 rodou contra o HTML servido pelo `localhost:3000` e devolveu `boldb2b` — 58
 citações contra 5 do segundo colocado.
 
-**Falta:** conferir no popup que o campo vem preenchido e que editar funciona.
+**Conferido na tela em 2026-08-31:** o campo vem preenchido e a correção manual
+persiste para aquele endereço.
 
 ---
 
 ## T-006 — Senha como método, além do código
 
-**Estado:** construída, **falta o teste real** · **Escopo reduzido pela** [ADR-0003](../adr/0003-sem-cofre-de-credenciais.md)
+**Estado:** **fechada** — verificada pelo operador em 2026-08-31 · **Escopo reduzido pela** [ADR-0003](../adr/0003-sem-cofre-de-credenciais.md)
 
 `classic/validate` é instantâneo (sem ida ao e-mail) e a `boldb2b` tem os dois
 métodos habilitados
@@ -119,7 +131,7 @@ nada da senha sobrevive ao fechamento do popup.
 
 ## T-007 — UI dirigida pelos flags da conta
 
-**Estado:** construída, **falta conferir na tela** · **Depende de:** T-002
+**Estado:** **fechada** — conferida na tela pelo operador em 2026-08-31 · **Depende de:** T-002
 
 O `start` devolve `showClassicAuthentication` / `showAccessKeyAuthentication` /
 `oauthProviders`. A UI desenha a partir deles, sem chutar o método — é o que
@@ -166,7 +178,7 @@ reportá-lo como condição de ambiente. Registrado em
 
 ## T-010 — Preview `.vtex.app`
 
-**Estado:** construída, **falta o teste real** · **Decidida pela** [ADR-0004](../adr/0004-preview-entra-producao-nao.md)
+**Estado:** **fechada** — login no preview verificado pelo operador em 2026-08-31 · **Decidida pela** [ADR-0004](../adr/0004-preview-entra-producao-nao.md)
 
 A extensão passa a agir em `*.vtex.app`, para o cliente aprovar funcionalidade
 logada sem tocar em DevTools. Produção fica de fora por desnecessidade.
@@ -179,7 +191,7 @@ apagado por `refreshToken: true`.
 recusados — incluindo `localhost.evil.com` e `evil-vtex.app.com`, que passariam
 num teste ingênuo de sufixo. Conta lida do subdomínio, com deploy de branch.
 
-**Falta:** um login real no preview da `boldb2b`.
+**Verificado em 2026-08-31:** login real no preview da `boldb2b`, pelo operador.
 
 ---
 
@@ -214,22 +226,106 @@ Conhecimento de plataforma promovido para
 
 ## T-011 — Como o cliente instala isso
 
-**Estado:** aberta · **Bloqueia:** o uso por cliente
+**Estado:** **em andamento** · **Decidida pela** [ADR-0005](../adr/0005-distribuicao-pela-chrome-web-store.md) · **Bloqueia:** o uso por cliente
 
 "Carregar sem compactação" exige modo desenvolvedor — inviável para quem "nunca
 usou o DevTools", que é exatamente o público da [ADR-0004](../adr/0004-preview-entra-producao-nao.md).
 
-Caminhos: publicar na Chrome Web Store (2 cliques para o cliente, mas revisão da
-Google e uma extensão que escreve cookie de sessão tende a receber escrutínio),
-ou distribuição interna por política de empresa.
+**Decidido em 2026-08-31: Chrome Web Store, item `unlisted`.** É o único caminho
+que dá instalação em um clique **e** atualização automática nas máquinas dos
+clientes. `.crx` auto-hospedado está morto no Windows e no macOS fora de política
+de empresa, e política de empresa exige Chrome gerenciado, que os clientes não
+têm. O porquê inteiro, com as portas que isso fecha, está na
+[ADR-0005](../adr/0005-distribuicao-pela-chrome-web-store.md).
 
-**Enquanto isto não existe, a extensão serve ao time, não ao cliente.**
+Pronto neste repo (2026-08-31): renome sem risco de marca, `tabs` fora do
+manifesto ([T-014](#t-014--a-permissão-tabs-saiu-do-manifesto)), versão `1.0.0`,
+[política de privacidade](../../PRIVACIDADE.md) escrita, e o
+[runbook de publicação](../runbooks/publicar-na-chrome-web-store.md) com listagem,
+justificativa de cada permissão e nota para o revisor prontas para colar.
+
+**Falta — e é com o operador:**
+
+1. [T-014](#t-014--a-permissão-tabs-saiu-do-manifesto) conferida no navegador (30 segundos, **bloqueia o envio**);
+2. [T-015](#t-015--a-política-de-privacidade-precisa-de-um-url-público) — política num URL público (**bloqueia o envio**);
+3. conta de desenvolvedor: 2FA, US$ 5, declaração de trader;
+4. preview `.vtex.app` público + usuário de teste **com senha**, para o revisor
+   conseguir entrar sozinho — sem isso a rejeição provável é "não funciona"
+   ([runbook §7](../runbooks/publicar-na-chrome-web-store.md#7-a-nota-para-o-revisor--o-ponto-que-mais-rejeita));
+5. cinco capturas de 1280x800, sem segredo nenhum na tela;
+6. enviar, e esperar de dias a semanas.
+
+**Pronto quando:** um cliente que nunca abriu o DevTools instala pelo link e
+loga na loja de preview.
+
+**Enquanto isto não existe, a extensão serve ao time, não ao cliente** — e o
+caminho de "carregar sem compactação" continua válido para quem é técnico.
+
+---
+
+## T-014 — A permissão `tabs` saiu do manifesto
+
+**Estado:** **construída, falta conferir no navegador** · **Serve à** [R-8](../rules/seguranca.md#r-8--permissões-da-extensão-o-mínimo-que-funciona) · **Bloqueia:** [T-011](#t-011--como-o-cliente-instala-isso)
+
+`tabs` era permissão a mais. Ela existe para dar acesso a quatro campos sensíveis
+de `tabs.Tab` — `url`, `pendingUrl`, `title`, `favIconUrl` — mas os
+`host_permissions` **já entregam esses mesmos campos** nas abas que casam com
+eles, e `tabs.reload()` não exige permissão nenhuma
+([documentação da API `chrome.tabs`](https://developer.chrome.com/docs/extensions/reference/api/tabs)).
+Como a extensão só age em `localhost`, `127.0.0.1` e `*.vtex.app` — todos no
+manifesto — ela nunca precisou de `tabs`.
+
+Menos uma permissão na tela de instalação, e uma a menos para justificar na
+revisão da Google.
+
+**A consequência, que precisou de mudança:** numa aba **fora** dos
+`host_permissions` o Chrome passa a devolver `tab.url` como `undefined`. O
+`detectaAlvo` respondia "Nenhuma aba aberta." nesse caso — mensagem errada e
+confusa. Agora ele devolve `classificaHost("")`, que é a mesma recusa de host
+não coberto: *"Esta aba não é uma loja em ambiente de teste."*
+([`background.js:34`](../../extension/background.js#L34))
+
+Coberto por [`testes/mensagens.mjs`](../testes/mensagens.mjs) — caso "aba fora
+dos host_permissions".
+
+⚠️ **Isto é dedução a partir da documentação, não medição** — exatamente o que a
+[R-2 já errou uma vez](../rules/seguranca.md#-correção-de-uma-versão-anterior-desta-regra).
+**Confira no navegador antes de enviar para a loja**, são 30 segundos:
+
+1. recarregue a extensão em `chrome://extensions`;
+2. numa aba de `localhost:3000`, o popup tem de reconhecer a loja **como antes**;
+3. numa aba de `google.com`, tem de dizer *"Esta aba não é uma loja em ambiente
+   de teste"* — e **não** "Nenhuma aba aberta".
+
+Se o passo 2 falhar, devolva `"tabs"` ao `manifest.json` e **corrija esta task**
+com o que se mediu.
+
+---
+
+## T-015 — A política de privacidade precisa de um URL público
+
+**Estado:** **aberta** · **Bloqueia:** [T-011](#t-011--como-o-cliente-instala-isso)
+
+O texto está escrito e revisado em [`PRIVACIDADE.md`](../../PRIVACIDADE.md), em
+português e inglês — o revisor da Google não lê português.
+
+O que falta é **hospedagem**: o dashboard exige um URL acessível **sem login**, e
+este repositório é **privado**. As três saídas, com o custo de cada uma, estão no
+[runbook §2](../runbooks/publicar-na-chrome-web-store.md#2-a-política-de-privacidade-precisa-de-um-url-público).
+A recomendada é uma página no site da Wicomm.
+
+⚠️ **Tornar este repositório público é uma das saídas, e é decisão do operador —
+não se faz por conta.** O `docs/` inteiro iria junto, inclusive research e
+reference sobre endpoints que a VTEX **não documenta**.
+
+**Pronto quando:** o URL abre numa janela anônima e está preenchido nos dois
+lugares do dashboard — configurações da conta e aba *Privacy* do item.
 
 ---
 
 ## T-009 — Indicador de quem está logado
 
-**Estado:** construída, **falta o teste real** (precisa de um JWT de verdade)
+**Estado:** **fechada** — verificada com JWT real pelo operador em 2026-08-31
 
 O JWT é legível (`sub`, `account`, `customerId`, `unitId`, `isRepresentative`,
 `exp`). O popup pode mostrar quem está logado agora e quanto falta para expirar,

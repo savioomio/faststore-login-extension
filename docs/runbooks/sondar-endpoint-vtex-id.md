@@ -96,4 +96,4 @@ Confira também `x-vtex-janus-router-backend-app` — diz qual família responde
    desfazer.
 4. **Anote na research, com o `curl` e a resposta.** Endpoint não documentado não
    tem outra especificação além da sua evidência
-   ([regra 1 de docs](../README.md#regras-que-valem-para-as-cinco-gavetas)).
+   ([regra 1 de docs](../README.md#regras-que-valem-para-as-seis-gavetas)).

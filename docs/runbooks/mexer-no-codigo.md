@@ -124,6 +124,16 @@ a heurística roda de novo e devolve o palpite errado por cima do seu acerto. O
 `finish()` preserva a marca `manual` — logar com sucesso não é motivo para a
 extensão voltar a achar que sabe melhor.
 
+**`detectaAlvo` e o `tab.url` que vem `undefined`.** A extensão **não pede a
+permissão `tabs`** — os `host_permissions` já entregam `url`, `title` e
+`favIconUrl` nas abas que casam com eles, e `tabs.reload()` não pede permissão
+nenhuma. O preço: numa aba **fora** dos hosts do manifesto, `tab.url` vem
+`undefined`. Por isso a primeira linha devolve `classificaHost("")` — a mesma
+recusa de host não coberto — e **não** uma mensagem própria. A versão anterior
+dizia "Nenhuma aba aberta.", que era falso e mandava a pessoa procurar o problema
+no lugar errado. Mexeu aqui? Rode `mensagens.mjs`, caso "aba fora dos
+host_permissions".
+
 **Cookie:** `httpOnly` como a VTEX faz (nenhum código de cliente lê este cookie
 por `document.cookie` — quem lê é o servidor, por header); `secure` acompanha o
 esquema da origem (obrigatório em `.vtex.app`, impossível em `http://localhost`).

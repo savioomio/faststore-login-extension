@@ -126,8 +126,28 @@ propagação (`4xx` com corpo **não-JSON**), teto de 3 tentativas.
 ## R-8 — Permissões da extensão: o mínimo que funciona.
 
 Pedir `<all_urls>` numa extensão que mexe com cookie de sessão é injustificável.
-O conjunto mínimo verificado está na
-[research de viabilidade](../research/2026-08-30-viabilidade-extensao-dev-login.md#permissões-mínimas).
+O conjunto **de hoje** está logo abaixo; a
+[research de viabilidade](../research/2026-08-30-viabilidade-extensao-dev-login.md#5-permissões-mínimas)
+guarda o conjunto **original**, de 2026-08-30, e envelheceu de propósito — mudou
+duas vezes desde então.
 
 Toda permissão nova entra com uma linha explicando **qual funcionalidade morre
-sem ela**.
+sem ela**. E toda permissão que **deixa** de ser necessária sai — não se guarda
+permissão "por via das dúvidas".
+
+**Conjunto de hoje** (`extension/manifest.json`, 2026-08-31):
+
+| Permissão | O que morre sem ela |
+|---|---|
+| `cookies` | não há como gravar nem apagar o cookie de sessão. É a função inteira |
+| `storage` | o login se perde quando o service worker dorme, entre pedir o código e digitá-lo |
+| `scripting` | o logout não desloga a interface: a sessão do FastStore vive no IndexedDB da página |
+| 4 hosts | 3 para gravar a sessão (`localhost`, `127.0.0.1`, `*.vtex.app`), 1 só para **ler** a API (`*.myvtex.com`) |
+
+`tabs` **saiu** em 2026-08-31: os `host_permissions` já entregam `tab.url` nas
+abas que interessam, e `tabs.reload()` não pede permissão nenhuma. Registrado em
+[T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto) — inclusive
+a conferência no navegador que ainda falta.
+
+Nunca houve `<all_urls>`, e isso também é o que faz a revisão da Chrome Web Store
+ser possível ([ADR-0005](../adr/0005-distribuicao-pela-chrome-web-store.md)).

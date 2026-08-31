@@ -1,7 +1,11 @@
-# faststore-login-extension
+# Login de teste em lojas VTEX — Wicomm
 
 Entre na loja em ambiente de teste com seu **e-mail e um código** — sem copiar
 nada do DevTools.
+
+> Ferramenta independente da Wicomm. **Não é um produto da VTEX** e não tem
+> vínculo, patrocínio nem endosso da VTEX. Como ela trata seus dados:
+> [`PRIVACIDADE.md`](../PRIVACIDADE.md).
 
 | Onde funciona | Para quem |
 | :--- | :--- |
@@ -12,6 +16,15 @@ nada do DevTools.
 ---
 
 ## Instalar
+
+**Se você recebeu um link da Chrome Web Store:** clique nele, *Usar no Chrome*,
+pronto. Nada mais. A extensão se atualiza sozinha daí em diante.
+
+> O link ainda não existe: a publicação está em
+> [T-011](../docs/tasks/extensao.md#t-011--como-o-cliente-instala-isso). Quando
+> sair, ele entra aqui.
+
+**Enquanto isso — ou se você mexe no código:**
 
 1. Abra `chrome://extensions` (ou `comet://extensions`)
 2. Ligue **Modo do desenvolvedor**, no canto superior direito
@@ -61,7 +74,7 @@ está em [`docs/runbooks/mexer-no-codigo.md`](../docs/runbooks/mexer-no-codigo.m
 
 | | |
 |---|---|
-| `manifest.json` | Permissões: quatro hosts, quatro permissões, nada de `<all_urls>`. |
+| `manifest.json` | Permissões: quatro hosts, **três** permissões, nada de `<all_urls>`. |
 | `alvo.js` | **Onde a extensão pode escrever sessão** e como descobre a loja. |
 | `vtexid.js` | O handshake com o VTEX ID. |
 | `background.js` | Orquestra, guarda o token, escreve o cookie. |

@@ -103,12 +103,15 @@ tasks/<área>.md, seções ## T-001…      área por arquivo, número por seç�
 - [ADR-0002 — Handshake stateless: `authenticationToken` no corpo](adr/0002-handshake-stateless-token-no-corpo.md)
 - [ADR-0003 — A extensão não guarda credencial nenhuma](adr/0003-sem-cofre-de-credenciais.md)
 - [ADR-0004 — O preview `.vtex.app` entra no escopo; produção não](adr/0004-preview-entra-producao-nao.md)
+- [ADR-0005 — Distribuição pela Chrome Web Store, como item *unlisted*](adr/0005-distribuicao-pela-chrome-web-store.md)
 
 ### Research
 - [2026-08-30 — Viabilidade da extensão de dev-login](research/2026-08-30-viabilidade-extensao-dev-login.md)
 
 ### Runbooks
 - [Sondar um endpoint não documentado do VTEX ID](runbooks/sondar-endpoint-vtex-id.md)
+- [Publicar a extensão na Chrome Web Store](runbooks/publicar-na-chrome-web-store.md) ·
+  listagem, justificativa de cada permissão e nota para o revisor prontas para colar.
 
 ### Tasks
 - [Extensão](tasks/extensao.md)
@@ -125,6 +128,11 @@ tasks/<área>.md, seções ## T-001…      área por arquivo, número por seç�
 [extensão](../extension/), e a documentação de *como instalar e usar* fica com
 ela — [`extension/README.md`](../extension/README.md). O *porquê* das decisões e
 o conhecimento de plataforma ficam aqui.
+
+A [política de privacidade](../PRIVACIDADE.md) mora na **raiz**, e não numa
+gaveta: ela não é conhecimento interno, é documento público que precisa de um URL
+estável — é o que a Chrome Web Store exige e o que o usuário lê antes de
+instalar.
 
 ⚠️ **O código da extensão não tem comentários.** O que os substitui é
 [`runbooks/mexer-no-codigo.md`](runbooks/mexer-no-codigo.md): um mapa arquivo a
