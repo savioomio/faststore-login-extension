@@ -145,9 +145,9 @@ permissão "por via das dúvidas".
 | 4 hosts | 3 para gravar a sessão (`localhost`, `127.0.0.1`, `*.vtex.app`), 1 só para **ler** a API (`*.myvtex.com`) |
 
 `tabs` **saiu** em 2026-08-31: os `host_permissions` já entregam `tab.url` nas
-abas que interessam, e `tabs.reload()` não pede permissão nenhuma. Registrado em
-[T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto) — inclusive
-a conferência no navegador que ainda falta.
+abas que interessam, e `tabs.reload()` não pede permissão nenhuma. Deduzido da
+documentação da API e **conferido no navegador** antes de fechar —
+[T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto).
 
 Nunca houve `<all_urls>`, e isso também é o que faz a revisão da Chrome Web Store
 ser possível ([ADR-0005](../adr/0005-distribuicao-pela-chrome-web-store.md)).
