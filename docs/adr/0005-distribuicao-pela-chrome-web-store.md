@@ -1,6 +1,6 @@
 # ADR-0005 — Distribuição pela Chrome Web Store, como item *unlisted*
 
-- **Estado:** aceita
+- **Estado:** aceita · **em revisão pela equipe da Wicomm em 2026-08-31** — se sair outra escolha de lá, esta ADR é substituída por uma nova, não editada
 - **Data:** 2026-08-31
 - **Decidido por:** operador
 - **Fecha:** [T-011](../tasks/extensao.md#t-011--como-o-cliente-instala-isso), o problema que a [ADR-0004](0004-preview-entra-producao-nao.md) deixou aberto
@@ -55,7 +55,7 @@ Três coisas mudaram no pacote por causa desta decisão:
    produto da VTEX. Citar a marca para dizer **com o que a ferramenta funciona**
    é uso legítimo — desde que a autoria esteja no nome e a não-afiliação, na
    descrição e na política.
-2. **`tabs` saiu do manifesto** ([T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto)).
+2. **`tabs` saiu do manifesto** ([T-014](../tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto), conferida no navegador).
    Permissão a mais é escrutínio a mais na revisão e um item a mais na tela de
    instalação, e essa não fazia falta.
 3. **Política de privacidade escrita** ([`PRIVACIDADE.md`](../../PRIVACIDADE.md)),

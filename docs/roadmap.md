@@ -70,10 +70,14 @@ Pronto: renome sem risco de marca, `tabs` fora do manifesto, versão `1.0.0`,
 [runbook de publicação](runbooks/publicar-na-chrome-web-store.md) com tudo pronto
 para colar no dashboard.
 
-Falta, e é com o operador: conferir a saída do `tabs` no navegador
-([T-014](tasks/extensao.md#t-014--a-permissão-tabs-saiu-do-manifesto)), pôr a
-política num URL público ([T-015](tasks/extensao.md#t-015--a-política-de-privacidade-precisa-de-um-url-público)),
-abrir a conta de desenvolvedor e enviar ([T-011](tasks/extensao.md#t-011--como-o-cliente-instala-isso)).
+Falta, e é com o operador: pôr a política num URL público
+([T-015](tasks/extensao.md#t-015--a-política-de-privacidade-precisa-de-um-url-público)),
+abrir a conta de desenvolvedor e enviar
+([T-011](tasks/extensao.md#t-011--como-o-cliente-instala-isso)).
+
+**A extensão é apresentada à equipe da Wicomm em 2026-08-31, e a forma de
+distribuir pode mudar ali.** Até essa conversa, a ADR-0005 é a decisão vigente —
+se a equipe escolher outro caminho, ela é **substituída**, não reescrita.
 
 ---
 

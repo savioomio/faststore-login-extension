@@ -246,14 +246,17 @@ justificativa de cada permissão e nota para o revisor prontas para colar.
 
 **Falta — e é com o operador:**
 
-1. [T-014](#t-014--a-permissão-tabs-saiu-do-manifesto) conferida no navegador (30 segundos, **bloqueia o envio**);
-2. [T-015](#t-015--a-política-de-privacidade-precisa-de-um-url-público) — política num URL público (**bloqueia o envio**);
-3. conta de desenvolvedor: 2FA, US$ 5, declaração de trader;
-4. preview `.vtex.app` público + usuário de teste **com senha**, para o revisor
+1. [T-015](#t-015--a-política-de-privacidade-precisa-de-um-url-público) — política num URL público (**bloqueia o envio**);
+2. conta de desenvolvedor: 2FA, US$ 5, declaração de trader;
+3. preview `.vtex.app` público + usuário de teste **com senha**, para o revisor
    conseguir entrar sozinho — sem isso a rejeição provável é "não funciona"
    ([runbook §7](../runbooks/publicar-na-chrome-web-store.md#7-a-nota-para-o-revisor--o-ponto-que-mais-rejeita));
-5. cinco capturas de 1280x800, sem segredo nenhum na tela;
-6. enviar, e esperar de dias a semanas.
+4. cinco capturas de 1280x800, sem segredo nenhum na tela;
+5. enviar, e esperar de dias a semanas.
+
+> A apresentação para a equipe da Wicomm ficou para 2026-08-31. **A forma de
+> distribuir pode mudar ali** — se mudar, a [ADR-0005](../adr/0005-distribuicao-pela-chrome-web-store.md)
+> é substituída por outra, não editada.
 
 **Pronto quando:** um cliente que nunca abriu o DevTools instala pelo link e
 loga na loja de preview.
@@ -265,7 +268,7 @@ caminho de "carregar sem compactação" continua válido para quem é técnico.
 
 ## T-014 — A permissão `tabs` saiu do manifesto
 
-**Estado:** **construída, falta conferir no navegador** · **Serve à** [R-8](../rules/seguranca.md#r-8--permissões-da-extensão-o-mínimo-que-funciona) · **Bloqueia:** [T-011](#t-011--como-o-cliente-instala-isso)
+**Estado:** **fechada** — conferida no navegador pelo operador em 2026-08-31 · **Serve à** [R-8](../rules/seguranca.md#r-8--permissões-da-extensão-o-mínimo-que-funciona)
 
 `tabs` era permissão a mais. Ela existe para dar acesso a quatro campos sensíveis
 de `tabs.Tab` — `url`, `pendingUrl`, `title`, `favIconUrl` — mas os
@@ -288,17 +291,19 @@ não coberto: *"Esta aba não é uma loja em ambiente de teste."*
 Coberto por [`testes/mensagens.mjs`](../testes/mensagens.mjs) — caso "aba fora
 dos host_permissions".
 
-⚠️ **Isto é dedução a partir da documentação, não medição** — exatamente o que a
-[R-2 já errou uma vez](../rules/seguranca.md#-correção-de-uma-versão-anterior-desta-regra).
-**Confira no navegador antes de enviar para a loja**, são 30 segundos:
+**Medido no navegador em 2026-08-31, pelo operador** — a task nasceu como
+dedução a partir da documentação da API, que é exatamente o jeito como a
+[R-2 já errou uma vez](../rules/seguranca.md#-correção-de-uma-versão-anterior-desta-regra),
+e por isso não fechou até alguém abrir o Chrome:
 
-1. recarregue a extensão em `chrome://extensions`;
-2. numa aba de `localhost:3000`, o popup tem de reconhecer a loja **como antes**;
-3. numa aba de `google.com`, tem de dizer *"Esta aba não é uma loja em ambiente
-   de teste"* — e **não** "Nenhuma aba aberta".
+1. extensão recarregada em `chrome://extensions`, sem aviso;
+2. em `localhost:3000` e no preview, o popup reconhece a loja **como antes** — os
+   `host_permissions` entregam o `tab.url` mesmo sem `tabs`;
+3. numa aba fora deles, a resposta é *"Esta aba não é uma loja em ambiente de
+   teste"*.
 
-Se o passo 2 falhar, devolva `"tabs"` ao `manifest.json` e **corrija esta task**
-com o que se mediu.
+Se algum dia o passo 2 quebrar, a volta é devolver `"tabs"` ao `manifest.json` —
+e **corrigir esta task** com o que se mediu.
 
 ---
 
