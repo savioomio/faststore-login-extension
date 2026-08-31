@@ -14,6 +14,7 @@ Decisão de fundo — por que Web Store e por que *unlisted* — está em
 
 | Item | Onde |
 |---|---|
+| **Todos os textos, campo a campo, para colar** | [`chrome-web-store-campos.txt`](chrome-web-store-campos.txt) |
 | Política de privacidade (PT + EN) | [`PRIVACIDADE.md`](../../PRIVACIDADE.md) — **falta pôr num URL público**, §2 |
 | Nome e descrição curta | [`extension/manifest.json`](../../extension/manifest.json) |
 | Descrição longa da listagem | §4 deste runbook, pronta para colar |
@@ -45,13 +46,15 @@ então o link para `PRIVACIDADE.md` aqui **não serve**. Três saídas:
 
 | Saída | Custo | Observação |
 |---|---|---|
-| **Página no site da Wicomm** (ex.: `wicomm.com.br/extensao-login/privacidade`) | precisa de deploy | **recomendada** — dá credibilidade e é o que o revisor espera de uma empresa |
-| **Gist público** no GitHub | 2 minutos | funciona, mas fica com cara de rascunho |
-| Tornar este repositório **público** | 1 clique | ⚠️ expõe todo o `docs/` — inclusive research e reference sobre endpoints não documentados da VTEX. **Decisão do operador, não faça por conta.** |
+| ✅ **Página no domínio da Wicomm** | precisa de deploy | **escolhida em 2026-08-31** — dá credibilidade e é o que o revisor espera de uma empresa |
+| **Gist público** no GitHub | 2 minutos | descartada: funciona, mas fica com cara de rascunho |
+| Tornar este repositório **público** | 1 clique | descartada — ⚠️ exporia todo o `docs/`, inclusive research e reference sobre endpoints não documentados da VTEX |
 
-Escolhida a saída, cole o texto de [`PRIVACIDADE.md`](../../PRIVACIDADE.md) lá e
-guarde o URL: ele vai em **dois lugares** — nas configurações da conta de
-desenvolvedor e na aba *Privacy* do item.
+Cole o texto de [`PRIVACIDADE.md`](../../PRIVACIDADE.md) na página, **confira numa
+janela anônima** que ela abre sem login, e guarde o URL: ele vai em **dois
+lugares** — nas configurações da conta de desenvolvedor e na aba *Privacy* do
+item. Acompanhado em
+[T-015](../tasks/extensao.md#t-015--a-política-de-privacidade-precisa-de-um-url-público).
 
 ## 3. Empacotar
 
@@ -119,8 +122,10 @@ respectivos titulares, citadas apenas para identificar com quais sistemas a
 ferramenta funciona.
 ```
 
-**Imagens** — pelo menos uma captura de 1280x800 (até 5). Tire estas, nesta
-ordem, que é a que conta a história para o revisor:
+**Imagens** — pelo menos uma captura, no máximo cinco. **1280x800 ou 640x400,
+JPEG ou PNG de 24 bits sem alfa** (uma captura de janela com canto arredondado
+transparente é recusada). Tire estas, nesta ordem, que é a que conta a história
+para o revisor:
 
 1. popup aberto sobre a loja em `localhost:3000`, na tela de e-mail;
 2. tela do código de 6 dígitos;
@@ -131,89 +136,63 @@ ordem, que é a que conta a história para o revisor:
 
 > ⚠️ **Nenhuma captura pode mostrar e-mail real, código ou JWT**
 > ([R-4](../rules/seguranca.md#r-4--nada-de-segredo-em-log-em-documento-ou-em-commit)).
-> Use `usuario@exemplo.com` e borre o que sobrar.
+> Use o usuário de teste descartável e borre o que sobrar. A tela "Tudo certo"
+> mostra o e-mail logado e a hora de expiração — é a que mais escapa.
+>
+> ⚠️ **E nenhuma captura com o nome antigo.** O popup dizia "FastStore Login" até
+> 2026-08-31 ([`popup.html:63`](../../extension/popup.html#L63)); hoje diz "Login
+> de teste". Captura com o nome velho contradiz o nome da listagem — e o nome
+> velho é justamente o que sugeria produto da VTEX.
 
 Tenha também um **ícone 128x128** (já existe em `extension/icones/128.png`) e
 prepare um **tile 440x280**; o dashboard dirá se ele é obrigatório para a sua
 categoria. Um **vídeo curto no YouTube** é opcional, mas resolve o problema da
 §7 melhor que qualquer texto — vale os dez minutos de gravação.
 
-## 5. Justificativa das permissões
+## 5. Justificativa das permissões, uso de dados e nota para o revisor
 
-Um campo por permissão. Colar assim:
+**Os textos exatos, campo a campo, estão em
+[`chrome-web-store-campos.txt`](chrome-web-store-campos.txt)** — um arquivo só,
+para colar sem reescrever. Aqui ficam as armadilhas do formulário, conferidas na
+tela do dashboard em 2026-08-31:
 
-| Campo | Texto |
-|---|---|
-| **`cookies`** | A extensão grava e apaga o cookie de sessão do VTEX ID (`VtexIdclientAutCookie_<conta>`) na loja de teste aberta na aba. É a função inteira da extensão: sem ela não há como entregar a sessão à loja, nem como deslogar. Só é usada em localhost, 127.0.0.1 e *.vtex.app. |
-| **`storage`** | O service worker do Manifest V3 é encerrado por ociosidade no meio do login (entre pedir o código e digitá-lo). O `authenticationToken` intermediário do VTEX ID fica em `chrome.storage.session`, que morre com a sessão do navegador, e o nome da loja em `chrome.storage.local`. Sem isso o login se perde quando o usuário sai para buscar o código no e-mail. |
-| **`scripting`** | A loja FastStore guarda a sessão do cliente no IndexedDB da página (`keyval-store` → `fs::session`), não só no cookie. Apagar o cookie não desloga a interface. A extensão injeta um script na aba da loja de teste apenas para zerar a identidade dessa sessão no logout, preservando CEP e idioma. É a única forma de alcançar o IndexedDB da página. |
-| **`http://localhost/*`, `http://127.0.0.1/*`** | Onde a loja em desenvolvimento roda. É onde a extensão grava o cookie de sessão e recarrega a aba. |
-| **`https://*.vtex.app/*`** | Endereço de preview de uma loja FastStore, usado por quem aprova a loja antes de ela ir ao ar. Mesmo uso do localhost. |
-| **`https://*.myvtex.com/*`** | **Somente leitura.** A API de autenticação do VTEX ID só existe neste domínio (medido: 404 em localhost e no preview, 200 em *.myvtex.com), então é para lá que as chamadas de login são feitas. A extensão nunca grava cookie nem sessão neste domínio, e as chamadas usam `credentials: 'omit'`, sem enviar nem tocar em nenhuma sessão existente do usuário. |
+**1. "Você está usando código remoto?" vem marcado como SIM.** Está errado:
+todo o JS vem no pacote, não há `<script>` externo, import remoto nem `eval()`.
+**Marque NÃO.** Declarar SIM é divulgação falsa e puxa revisão aprofundada.
 
-**Propósito único** (campo *Single purpose*):
+**2. "Justificativa de Permissão do host" é UM campo só**, para os quatro hosts
+juntos — não um por host. O texto do `.txt` já vem unificado, separando o papel
+de **escrever** (localhost, 127.0.0.1, `*.vtex.app`) do de **ler**
+(`*.myvtex.com`). O dashboard avisa, em amarelo, que permissão de host pode puxar
+revisão detalhada e atrasar a publicação. É esperado: é a permissão que a
+extensão não tem como não pedir.
 
-```
-Autenticar um usuário VTEX numa loja FastStore rodando em ambiente de
-desenvolvimento ou de preview, gravando o cookie de sessão do VTEX ID na aba,
-para que o desenvolvedor ou o cliente possa testar funcionalidades que exigem
-login sem manipular cookies no DevTools.
-```
+**3. "Mais instruções" tem limite de 500 caracteres** — bem menos do que a
+explicação natural do fluxo. O texto do `.txt` cabe.
 
-## 6. Formulário de uso de dados
-
-Marcar **duas** categorias, e só:
-
-- **Informação de identificação pessoal** — o e-mail que o usuário digita para
-  iniciar o login;
-- **Informação de autenticação** — o código de acesso ou a senha, mais o token
-  de sessão do VTEX ID.
-
-Não marcar: saúde, financeiro, comunicações pessoais, localização, histórico de
-navegação, atividade do usuário, conteúdo de site.
-
-As três certificações podem ser marcadas com verdade — não vendemos nem
-transferimos dado a terceiros, não usamos para nada fora do propósito único, e
-não usamos para análise de crédito ou empréstimo.
-
-O URL da política de privacidade (§2) vai aqui também. **O que está marcado aqui
-tem de bater com o texto da política** — divergência entre os dois é motivo de
-rejeição.
+**4. Uso de dados: marcar exatamente duas caixas** — *Informações de
+identificação pessoal* (o e-mail) e *Informações de autenticação* (código, senha
+e token). Mais as três declarações, todas verdadeiras aqui. **O que está marcado
+tem de bater com a [política de privacidade](../../PRIVACIDADE.md)** —
+divergência entre os dois é motivo de rejeição.
 
 > Desde **1º de agosto de 2026** vale a regra de dado *estritamente necessário*
 > ao propósito único declarado, com divulgação prévia. Substancialmente a
 > extensão já está dentro; o que ela precisa é estar **declarado**.
 
-## 7. A nota para o revisor — o ponto que mais rejeita
+**5. Credenciais de teste são campo obrigatório na prática.** O revisor não tem
+seu `localhost:3000` e **não tem acesso ao e-mail** que recebe o código de 6
+dígitos. Sem uma forma de ele entrar sozinho, o item volta como "não funciona" —
+é a rejeição mais provável deste item. Preparação necessária **antes** de enviar:
 
-O revisor **não tem** seu `localhost:3000` e **não tem acesso ao e-mail** que
-recebe o código. Se ele não conseguir usar, o item volta como "não funciona".
-Preencha o campo de notas com algo assim, trocando o que está entre `<>`:
-
-```
-Esta extensão funciona apenas em ambiente de teste de lojas VTEX FastStore
-(localhost e endereços de preview .vtex.app). Para testar:
-
-1. Abra <https://SUA-LOJA.vtex.app> (loja de demonstração, pública).
-2. Clique no ícone da extensão.
-3. Escolha "Prefiro entrar com minha senha".
-4. Use as credenciais de teste: <usuario-de-teste@dominio> / <senha>
-5. A página recarrega logada; o menu passa a mostrar a conta.
-
-Em qualquer outra aba a extensão responde "Esta aba não é uma loja em ambiente
-de teste" e não faz nada — é o comportamento esperado.
-
-Vídeo demonstrando o fluxo completo: <link>
-```
-
-Preparação necessária **antes** de enviar:
 - um preview `.vtex.app` **no ar e público**;
-- um usuário de teste **com senha habilitada** naquela conta — o caminho de
-  senha (`classic/validate`) não depende de caixa de entrada, e é a única forma
-  de o revisor conseguir entrar sozinho;
-- esse usuário não pode ter dado real nenhum. É descartável.
+- um usuário de teste **com senha habilitada** naquela conta — o caminho de senha
+  (`classic/validate`) não depende de caixa de entrada, e é a única forma de o
+  revisor conseguir entrar sozinho;
+- esse usuário não pode ter dado real nenhum. É descartável, e **não é o seu
+  e-mail pessoal**.
 
-## 8. Enviar e esperar
+## 6. Enviar e esperar
 
 Envie e **não mexa mais**. Prazo típico: poucos dias; pode chegar a semanas, e há
 fila estendida desde abril de 2026. Passando de **três semanas**, abra chamado no
@@ -225,10 +204,10 @@ ajuda), código ofuscado (não há), desenvolvedor novo e item novo (é o nosso 
 
 **Se rejeitar:** a mensagem cita a política violada. Corrija exatamente aquilo,
 suba a `version` e reenvie — reenviar sem mudar nada só queima tempo de fila. As
-duas rejeições prováveis aqui são "o revisor não conseguiu usar" (§7) e
+duas rejeições prováveis aqui são "o revisor não conseguiu usar" (§5) e
 "justificativa de permissão insuficiente" (§5).
 
-## 9. Depois de aprovada
+## 7. Depois de aprovada
 
 1. O item ganha uma URL `https://chromewebstore.google.com/detail/<id>`. **É esse
    link que vai para o cliente** — instalar é um clique.

@@ -1,0 +1,196 @@
+================================================================================
+CHROME WEB STORE — TEXTOS PARA COLAR NO DASHBOARD
+Extensao: Login de teste em lojas VTEX - Wicomm  ·  v1.0.0  ·  2026-08-31
+Cada bloco abaixo corresponde a UM campo do formulario. Copie entre as linhas.
+Contexto e porque de cada escolha: docs/runbooks/publicar-na-chrome-web-store.md
+
+LINHAS COMECADAS COM >>> SAO RECADO PARA VOCE. Nao vao para o formulario.
+================================================================================
+
+
+### ANTES DE COLAR — 4 COISAS QUE O FORMULARIO ERRA SOZINHO ###
+
+1. "Voce esta usando codigo remoto?"  ->  marque **NAO**.
+   O padrao veio marcado como SIM na sua tela. Esta errado: todo o JS da
+   extensao vem dentro do pacote, nao ha <script> externo, import remoto nem
+   eval(). Declarar SIM e uma divulgacao falsa e puxa revisao aprofundada.
+
+2. "Justificativa de Permissao do host" e UM campo so, para os 4 hosts juntos.
+   O texto abaixo ja vem unificado.
+
+3. "Mais instrucoes" tem limite de 500 caracteres. O texto abaixo cabe.
+
+4. Os prints tem de ser 1280x800 ou 640x400, JPEG ou PNG de 24 bits SEM ALFA.
+   As duas capturas que voce mandou nao servem como estao — ver o fim do arquivo.
+
+
+================================================================================
+1. PRIVACIDADE  >  UNICO PROPOSITO            (limite 1.000)
+================================================================================
+Autenticar um usuario VTEX numa loja FastStore rodando em ambiente de
+desenvolvimento ou de preview, gravando o cookie de sessao do VTEX ID na aba
+aberta, para que o desenvolvedor ou o cliente possa testar funcionalidades que
+exigem login (carrinho, favoritos, minha conta, preco B2B) sem manipular
+cookies no DevTools.
+
+
+================================================================================
+2. JUSTIFICATIVA DA PERMISSAO  >  COOKIES            (limite 1.000)
+================================================================================
+A extensao grava e apaga o cookie de sessao do VTEX ID
+(VtexIdclientAutCookie_<conta>) na loja de teste aberta na aba. E a funcao
+inteira da extensao: sem esta permissao nao ha como entregar a sessao a loja
+depois do login, nem como deslogar. O cookie so e gravado em localhost,
+127.0.0.1 e *.vtex.app — nunca em producao e nunca em *.myvtex.com. Nenhum
+cookie e lido, copiado ou enviado para fora do navegador.
+
+
+================================================================================
+3. JUSTIFICATIVA DA PERMISSAO  >  STORAGE            (limite 1.000)
+================================================================================
+O service worker do Manifest V3 e encerrado por ociosidade, e isso acontece no
+meio do login: entre pedir o codigo de acesso e digita-lo, o usuario sai do
+navegador para abrir o e-mail. O authenticationToken intermediario do VTEX ID
+fica em chrome.storage.session, que e memoria e some ao fechar o navegador; o
+nome da loja e o endereco detectados ficam em chrome.storage.local, para a
+extensao nao ter de adivinhar de novo a cada uso. Sem storage o login se perde
+nesse intervalo, e o sintoma para o usuario e um codigo valido sendo recusado.
+Nenhuma senha e nenhum codigo de acesso e gravado: sao usados na requisicao e
+descartados.
+
+
+================================================================================
+4. JUSTIFICATIVA DA PERMISSAO  >  SCRIPTING            (limite 1.000)
+================================================================================
+A loja FastStore guarda a sessao do cliente no IndexedDB da propria pagina
+(keyval-store -> fs::session), e nao apenas no cookie. Apagar o cookie nao
+desloga a interface: a loja continua exibindo "Minha conta" e toda acao falha.
+A extensao injeta um script na aba da loja de teste, no logout e no inicio do
+login, com um unico objetivo: zerar a identidade dessa sessao (person, b2b),
+preservando CEP, idioma e canal. E a unica forma de alcancar o IndexedDB da
+pagina. O script e um arquivo do proprio pacote, nao roda em nenhuma aba fora
+de localhost/127.0.0.1/*.vtex.app, e nao le nem envia conteudo da pagina.
+
+
+================================================================================
+5. JUSTIFICATIVA DA PERMISSAO  >  PERMISSAO DO HOST            (limite 1.000)
+================================================================================
+Sao quatro hosts, com dois papeis diferentes.
+
+ESCREVER — localhost, 127.0.0.1 e *.vtex.app: sao os ambientes de teste de uma
+loja VTEX FastStore, o servidor de desenvolvimento local e o endereco de
+preview. E onde a extensao grava o cookie de sessao e recarrega a aba. Producao
+esta fora de proposito: la o login nativo da loja ja funciona.
+
+LER — *.myvtex.com: a API de autenticacao do VTEX ID existe somente neste
+dominio (medido: 404 em localhost e no preview, 200 em *.myvtex.com), entao e
+para la que as chamadas de login sao feitas. A extensao NUNCA grava cookie nem
+sessao neste dominio, e as chamadas usam credentials: 'omit', ou seja, nao
+enviam nem tocam em nenhuma sessao existente do usuario.
+
+Nao ha <all_urls> nem padrao amplo. Sem esses hosts nao ha onde gravar a sessao
+nem como autenticar.
+
+
+================================================================================
+6. CODIGO REMOTO
+================================================================================
+Marque: "Nao, nao estou usando codigo remoto".
+(O campo de justificativa some quando voce marca NAO.)
+
+
+================================================================================
+7. USO DE DADOS  >  MARCAR EXATAMENTE ESTAS DUAS
+================================================================================
+[X] Informacoes de identificacao pessoal
+        -> o e-mail que o usuario digita para iniciar o login
+[X] Informacoes de autenticacao
+        -> o codigo de acesso ou a senha, e o token de sessao do VTEX ID
+
+NAO marcar: saude · financeiras e de pagamento · comunicacoes pessoais · local ·
+historico da Web · atividade do usuario · conteudo do site
+
+DECLARACOES — marcar as tres. Todas sao verdadeiras aqui:
+[X] Nao vendo nem transfiro dados do usuario a terceiros fora dos casos aprovados
+[X] Nao uso nem transfiro dados do usuario para fins nao relacionados ao unico
+    objetivo do meu item
+[X] Nao uso nem transfiro dados do usuario para determinar credibilidade ou para
+    fins de emprestimo
+
+
+================================================================================
+8. POLITICA DE PRIVACIDADE  >  URL
+================================================================================
+>>> O texto esta pronto em PRIVACIDADE.md, em portugues e ingles. Falta so
+>>> hospedar: precisa de um endereco que abra SEM LOGIN — este repositorio e
+>>> privado, entao o link do GitHub nao serve.
+>>> Confira numa janela anonima antes de colar.
+
+DECIDIDO em 2026-08-31: vai numa pagina no dominio da Wicomm.
+
+Cole aqui o URL, quando a pagina estiver no ar: ________________________
+
+O MESMO URL vai em dois lugares: configuracoes da conta de desenvolvedor E a
+aba Privacidade do item.
+
+
+================================================================================
+9. INSTRUCOES DE TESTE  >  CREDENCIAIS
+================================================================================
+Nome de usuario (limite 100): ____________________________________________
+Senha           (limite 100): ____________________________________________
+
+>>> Tem de ser um usuario DESCARTAVEL, com SENHA habilitada, numa loja de teste.
+>>> Com senha porque o revisor nao tem acesso a caixa de entrada que recebe o
+>>> codigo de 6 digitos — o caminho de senha e a unica forma de ele entrar
+>>> sozinho. Sem isso, a rejeicao provavel e "a extensao nao funciona".
+>>> NAO use seu e-mail pessoal aqui.
+
+
+================================================================================
+10. INSTRUCOES DE TESTE  >  MAIS INSTRUCOES            (limite 500)
+================================================================================
+Funciona apenas em ambiente de teste de lojas VTEX FastStore: localhost e
+enderecos de preview .vtex.app.
+
+1. Abra https://SUALOJA.vtex.app (loja de demonstracao, publica)
+2. Clique no icone da extensao
+3. Escolha "Prefiro entrar com minha senha"
+4. Use as credenciais acima
+5. A pagina recarrega ja logada
+
+Em qualquer outra aba a extensao responde "Esta aba nao e uma loja em ambiente
+de teste" e nao faz nada. E o comportamento esperado.
+
+>>> Troque SUALOJA pelo endereco real antes de enviar.
+
+
+================================================================================
+11. PRINTS
+================================================================================
+Formato exigido: 1280x800 ou 640x400 · JPEG ou PNG de 24 bits SEM ALFA · no
+maximo 5, no minimo 1.
+
+As duas capturas que voce enviou NAO servem como estao, por tres motivos:
+
+  a) TAMANHO. Sao 511x394 e 913x351. Nenhum dos dois e aceito. Tire de novo com
+     a janela em 1280x800, ou monte a captura do popup sobre um fundo dessa
+     medida.
+
+  b) NOME ANTIGO. Elas mostram "FastStore Login" no cabecalho do popup. Isso foi
+     corrigido em 2026-08-31 (popup.html:63) — hoje o popup diz "Login de
+     teste". Uma captura com o nome antigo contradiz o nome da listagem, e o
+     nome antigo e justamente o que sugeria produto da VTEX.
+
+  c) DADO REAL. A segunda mostra um e-mail pessoal de verdade e o horario de
+     expiracao do acesso. Refaca com o usuario de teste descartavel.
+
+As cinco capturas que contam a historia certa para o revisor, nesta ordem:
+  1. popup aberto sobre a loja em localhost:3000, na tela de e-mail
+  2. tela do codigo de 6 digitos
+  3. tela "Tudo certo", com o rodape mostrando a loja detectada
+  4. a loja recarregada, com a conta aparecendo no menu
+  5. popup numa aba qualquer: "Esta aba nao e uma loja em ambiente de teste"
+     — esta e a que prova o escopo restrito, e vale mais que as outras quatro
+
+================================================================================

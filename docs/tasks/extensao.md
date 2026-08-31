@@ -250,7 +250,7 @@ justificativa de cada permissão e nota para o revisor prontas para colar.
 2. conta de desenvolvedor: 2FA, US$ 5, declaração de trader;
 3. preview `.vtex.app` público + usuário de teste **com senha**, para o revisor
    conseguir entrar sozinho — sem isso a rejeição provável é "não funciona"
-   ([runbook §7](../runbooks/publicar-na-chrome-web-store.md#7-a-nota-para-o-revisor--o-ponto-que-mais-rejeita));
+   ([runbook §5](../runbooks/publicar-na-chrome-web-store.md#5-justificativa-das-permissões-uso-de-dados-e-nota-para-o-revisor));
 4. cinco capturas de 1280x800, sem segredo nenhum na tela;
 5. enviar, e esperar de dias a semanas.
 
@@ -315,13 +315,19 @@ O texto está escrito e revisado em [`PRIVACIDADE.md`](../../PRIVACIDADE.md), em
 português e inglês — o revisor da Google não lê português.
 
 O que falta é **hospedagem**: o dashboard exige um URL acessível **sem login**, e
-este repositório é **privado**. As três saídas, com o custo de cada uma, estão no
-[runbook §2](../runbooks/publicar-na-chrome-web-store.md#2-a-política-de-privacidade-precisa-de-um-url-público).
-A recomendada é uma página no site da Wicomm.
+este repositório é **privado**, então o link do GitHub não serve.
 
-⚠️ **Tornar este repositório público é uma das saídas, e é decisão do operador —
-não se faz por conta.** O `docs/` inteiro iria junto, inclusive research e
-reference sobre endpoints que a VTEX **não documenta**.
+**Decidido em 2026-08-31 pelo operador: uma página no domínio da Wicomm.** É a
+saída recomendada no [runbook §2](../runbooks/publicar-na-chrome-web-store.md#2-a-política-de-privacidade-precisa-de-um-url-público)
+— dá credibilidade e é o que o revisor espera de uma empresa. As outras duas
+(gist público, repositório público) ficam registradas lá como descartadas.
+
+Cair fora da decisão: **tornar este repositório público** levaria junto o `docs/`
+inteiro, inclusive research e reference sobre endpoints que a VTEX **não
+documenta**. Não é para acontecer por atalho.
+
+**Falta:** publicar o conteúdo de [`PRIVACIDADE.md`](../../PRIVACIDADE.md) na
+página, e trazer o URL.
 
 **Pronto quando:** o URL abre numa janela anônima e está preenchido nos dois
 lugares do dashboard — configurações da conta e aba *Privacy* do item.
