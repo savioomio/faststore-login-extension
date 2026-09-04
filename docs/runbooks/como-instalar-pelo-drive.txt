@@ -6,8 +6,8 @@
 O QUE ESSA EXTENSAO FAZ
 Deixa voce entrar como cliente numa loja VTEX que ainda esta em teste
 (localhost ou o endereco de preview .vtex.app), usando seu e-mail e um codigo
-de 6 digitos. Serve para testar carrinho, favoritos, minha conta e preco B2B
-sem precisar copiar cookie no DevTools.
+de 6 digitos. Assim da para testar qualquer funcionalidade que exija estar
+logado, sem precisar copiar cookie no DevTools.
 
 Em loja de producao ela nao faz nada - e nem precisa, la o login normal ja
 funciona.
