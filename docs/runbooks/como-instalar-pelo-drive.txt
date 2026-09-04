@@ -1,0 +1,140 @@
+================================================================================
+  LOGIN DE TESTE EM LOJAS VTEX - WICOMM   ·   versao 1.0.0
+  Como instalar no seu Chrome. Leva 2 minutos.
+================================================================================
+
+O QUE ESSA EXTENSAO FAZ
+Deixa voce entrar como cliente numa loja VTEX que ainda esta em teste
+(localhost ou o endereco de preview .vtex.app), usando seu e-mail e um codigo
+de 6 digitos. Serve para testar carrinho, favoritos, minha conta e preco B2B
+sem precisar copiar cookie no DevTools.
+
+Em loja de producao ela nao faz nada - e nem precisa, la o login normal ja
+funciona.
+
+
+--------------------------------------------------------------------------------
+  INSTALAR - 5 PASSOS
+--------------------------------------------------------------------------------
+
+1. BAIXE E DESCOMPACTE O ZIP
+   Baixe "login-de-teste-wicomm-1.0.0.zip" desta pasta do Drive.
+   Windows: botao direito no arquivo > "Extrair tudo"
+   Mac: duplo clique no arquivo
+
+   >>> IMPORTANTE: guarde a pasta descompactada num lugar DEFINITIVO.
+   >>> Ex.: Documentos\extensoes-wicomm
+   >>> O Chrome nao copia os arquivos - ele le da pasta toda vez. Se voce
+   >>> apagar ou mover a pasta depois, a extensao para de funcionar.
+
+2. ABRA A PAGINA DE EXTENSOES
+   Digite na barra de endereco do Chrome:   chrome://extensions
+   (na barra de ENDERECO, nao na busca do Google)
+
+   Se preferir pelo menu: os tres pontinhos no canto superior direito >
+   Extensoes > Gerenciar extensoes.
+
+3. LIGUE O "MODO DO DESENVOLVEDOR"
+   E a chavinha no canto superior DIREITO dessa pagina.
+
+4. CLIQUE EM "CARREGAR SEM COMPACTACAO"
+   O botao aparece no canto superior esquerdo depois que voce liga o modo
+   desenvolvedor. Escolha a PASTA que voce descompactou no passo 1.
+
+   >>> Escolha a pasta, nao o arquivo .zip.
+   >>> A pasta certa e a que tem o arquivo "manifest.json" dentro dela.
+
+5. FIXE O ICONE NA BARRA
+   Clique na pecinha de quebra-cabeca ao lado da barra de endereco e no
+   alfinete ao lado de "Login de teste". Assim o icone fica sempre visivel.
+
+   Pronto.
+
+
+--------------------------------------------------------------------------------
+  COMO USAR
+--------------------------------------------------------------------------------
+
+1. Abra a loja de teste numa aba (localhost:3000 ou o endereco .vtex.app)
+2. Clique no icone da extensao
+3. Digite seu e-mail e clique em "Enviar codigo"
+4. Pegue o codigo de 6 digitos no seu e-mail e cole. Ele entra sozinho.
+5. A loja recarrega ja conectada.
+
+Pode fechar a janelinha para ir buscar o codigo - ao voltar ela retoma no
+mesmo ponto.
+
+Se a loja aceitar senha, aparece "Prefiro entrar com minha senha" e voce nao
+precisa esperar e-mail nenhum.
+
+Trocar de conta: "Sair desta conta", depois entrar com outro e-mail.
+
+
+--------------------------------------------------------------------------------
+  4 COISAS QUE CONFUNDEM TODO MUNDO
+--------------------------------------------------------------------------------
+
+1. "APONTEI PARA O ZIP E O CHROME RECUSOU"
+   Tem que apontar para a PASTA descompactada, nunca para o .zip.
+   No Windows, cuidado tambem com o duplo clique no zip: aquilo e so uma
+   visualizacao, e a pasta que aparece ali e temporaria. Extraia de verdade.
+
+2. "FUNCIONAVA E PAROU DO NADA"
+   Alguem apagou, moveu ou renomeou a pasta. O Chrome le os arquivos da pasta
+   original toda vez que abre. Coloque de volta no lugar, ou instale de novo.
+
+3. "TODA VEZ QUE ABRO O CHROME APARECE UM AVISO"
+   "Desative as extensoes do modo de desenvolvedor" - e normal, acontece com
+   qualquer extensao instalada assim. Feche o aviso no X ou em "Cancelar".
+   NAO clique em "Desativar", senao a extensao desliga.
+
+4. "SAIU VERSAO NOVA, COMO ATUALIZO?"
+   Por enquanto e na mao: baixe o zip novo, substitua a pasta antiga, e clique
+   no botao de recarregar (a setinha em circulo) no card da extensao em
+   chrome://extensions.
+
+
+--------------------------------------------------------------------------------
+  QUANDO NAO FUNCIONAR
+--------------------------------------------------------------------------------
+
+"Abra a loja primeiro"
+   A aba atual nao e a loja. Abra localhost:3000 ou o endereco .vtex.app e
+   clique no icone de novo.
+
+O codigo nao foi aceito
+   Cada codigo vale UMA VEZ SO. Peca um novo em "Reenviar".
+
+"O codigo expirou"
+   O codigo dura 10 minutos. Peca outro.
+
+"Muitas tentativas seguidas"
+   A VTEX bloqueia por 15 a 30 minutos. Nesse periodo ela DIZ que enviou o
+   e-mail, mas nao envia. So esperar.
+
+Diz que entrou, mas a loja nao deixa fazer nada
+   Saia e entre de novo.
+
+Nome da loja errado no rodape da janelinha
+   Clique no lapis e corrija. A correcao fica salva para aquele endereco.
+
+
+--------------------------------------------------------------------------------
+  SOBRE OS SEUS DADOS
+--------------------------------------------------------------------------------
+
+Nao existe servidor da Wicomm nessa historia. O seu e-mail e o codigo vao
+direto do seu navegador para a API de login da propria VTEX, e o resto fica no
+seu navegador. Sem telemetria, sem dado para terceiros.
+
+A extensao so escreve sessao em localhost, 127.0.0.1 e .vtex.app - nunca em
+loja de producao.
+
+
+--------------------------------------------------------------------------------
+
+Em breve ela sai na Chrome Web Store: ai vira um clique e atualiza sozinha.
+Ate la, e por aqui mesmo.
+
+Duvida ou algo quebrado: fala com o Savio.
+================================================================================

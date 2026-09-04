@@ -261,8 +261,15 @@ justificativa de cada permissão e nota para o revisor prontas para colar.
 **Pronto quando:** um cliente que nunca abriu o DevTools instala pelo link e
 loga na loja de preview.
 
-**Enquanto isto não existe, a extensão serve ao time, não ao cliente** — e o
-caminho de "carregar sem compactação" continua válido para quem é técnico.
+**Enquanto isto não existe, a extensão serve ao time, não ao cliente.** Para o
+time há uma ponte, montada em 2026-09-04: zip numa pasta do Drive, com guia de
+instalação escrito para quem nunca fez isso —
+[runbook](../runbooks/distribuir-pelo-drive.md) e
+[texto do guia](../runbooks/como-instalar-pelo-drive.txt). Versão em página, para
+mandar por link: https://claude.ai/code/artifact/7bf25da3-e4da-43dd-b641-c166b918bbc3
+
+É ponte, não solução: não atualiza sozinho, e a pasta descompactada tem de
+sobreviver na máquina de cada um. É exatamente o que a Web Store resolve.
 
 ---
 

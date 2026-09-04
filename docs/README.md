@@ -110,6 +110,8 @@ tasks/<área>.md, seções ## T-001…      área por arquivo, número por seç�
 
 ### Runbooks
 - [Sondar um endpoint não documentado do VTEX ID](runbooks/sondar-endpoint-vtex-id.md)
+- [Distribuir a extensão pelo Drive](runbooks/distribuir-pelo-drive.md) · a ponte
+  temporária para o time, enquanto a loja não aprova.
 - [Publicar a extensão na Chrome Web Store](runbooks/publicar-na-chrome-web-store.md) ·
   listagem, justificativa de cada permissão e nota para o revisor prontas para colar.
 
